@@ -134,21 +134,95 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUTH-01 – AUTH-13 | Phase 2 | Pending |
-| CLS-01 – CLS-05 | Phase 3 | Pending |
-| STU-01 – STU-06 | Phase 5 | Pending |
-| ATT-01 – ATT-10 | Phase 6 | Pending |
-| SUB-01 – SUB-08 | Phase 6 | Pending |
-| STAT-01 – STAT-03 | Phase 6 | Pending |
-| RPT-01 – RPT-09 | Phase 7 | Pending |
-| INFRA-01 – INFRA-06 | Phase 1–8 (cross-cutting) | Pending |
+| INFRA-03 | Phase 1 — Database Foundation | Pending |
+| AUTH-01 | Phase 2 — Go Auth API | Pending |
+| AUTH-02 | Phase 2 — Go Auth API | Pending |
+| AUTH-03 | Phase 2 — Go Auth API | Pending |
+| AUTH-04 | Phase 2 — Go Auth API | Pending |
+| AUTH-05 | Phase 2 — Go Auth API | Pending |
+| AUTH-06 | Phase 2 — Go Auth API | Pending |
+| AUTH-07 | Phase 2 — Go Auth API | Pending |
+| AUTH-11 | Phase 2 — Go Auth API | Pending |
+| AUTH-12 | Phase 2 — Go Auth API | Pending |
+| AUTH-13 | Phase 2 — Go Auth API | Pending |
+| INFRA-01 | Phase 2 — Go Auth API | Pending |
+| INFRA-02 | Phase 2 — Go Auth API | Pending |
+| CLS-01 | Phase 3 — Go CRUD API | Pending |
+| CLS-02 | Phase 3 — Go CRUD API | Pending |
+| CLS-03 | Phase 3 — Go CRUD API | Pending |
+| CLS-04 | Phase 3 — Go CRUD API | Pending |
+| CLS-05 | Phase 3 — Go CRUD API | Pending |
+| STU-01 | Phase 3 — Go CRUD API | Pending |
+| STU-02 | Phase 3 — Go CRUD API | Pending |
+| STU-03 | Phase 3 — Go CRUD API | Pending |
+| STU-04 | Phase 3 — Go CRUD API | Pending |
+| STU-05 | Phase 3 — Go CRUD API | Pending |
+| STU-06 | Phase 3 — Go CRUD API | Pending |
+| ATT-01 | Phase 3 — Go CRUD API | Pending |
+| SUB-05 | Phase 3 — Go CRUD API | Pending |
+| SUB-06 | Phase 3 — Go CRUD API | Pending |
+| SUB-07 | Phase 3 — Go CRUD API | Pending |
+| SUB-08 | Phase 3 — Go CRUD API | Pending |
+| AUTH-08 | Phase 4 — Flutter Auth Shell | Pending |
+| AUTH-09 | Phase 4 — Flutter Auth Shell | Pending |
+| AUTH-10 | Phase 4 — Flutter Auth Shell | Pending |
+| INFRA-04 | Phase 4 — Flutter Auth Shell | Pending |
+| CLS-01 | Phase 5 — Flutter Class + Student Management | Pending |
+| CLS-02 | Phase 5 — Flutter Class + Student Management | Pending |
+| CLS-03 | Phase 5 — Flutter Class + Student Management | Pending |
+| CLS-04 | Phase 5 — Flutter Class + Student Management | Pending |
+| CLS-05 | Phase 5 — Flutter Class + Student Management | Pending |
+| STU-01 | Phase 5 — Flutter Class + Student Management | Pending |
+| STU-02 | Phase 5 — Flutter Class + Student Management | Pending |
+| STU-03 | Phase 5 — Flutter Class + Student Management | Pending |
+| STU-04 | Phase 5 — Flutter Class + Student Management | Pending |
+| STU-05 | Phase 5 — Flutter Class + Student Management | Pending |
+| STU-06 | Phase 5 — Flutter Class + Student Management | Pending |
+| ATT-01 | Phase 6 — Flutter Attendance Swipe | Pending |
+| ATT-02 | Phase 6 — Flutter Attendance Swipe | Pending |
+| ATT-03 | Phase 6 — Flutter Attendance Swipe | Pending |
+| ATT-04 | Phase 6 — Flutter Attendance Swipe | Pending |
+| ATT-05 | Phase 6 — Flutter Attendance Swipe | Pending |
+| ATT-06 | Phase 6 — Flutter Attendance Swipe | Pending |
+| ATT-07 | Phase 6 — Flutter Attendance Swipe | Pending |
+| ATT-08 | Phase 6 — Flutter Attendance Swipe | Pending |
+| ATT-09 | Phase 6 — Flutter Attendance Swipe | Pending |
+| ATT-10 | Phase 6 — Flutter Attendance Swipe | Pending |
+| SUB-01 | Phase 6 — Flutter Attendance Swipe | Pending |
+| SUB-02 | Phase 6 — Flutter Attendance Swipe | Pending |
+| SUB-03 | Phase 6 — Flutter Attendance Swipe | Pending |
+| SUB-04 | Phase 6 — Flutter Attendance Swipe | Pending |
+| SUB-05 | Phase 6 — Flutter Attendance Swipe | Pending |
+| SUB-06 | Phase 6 — Flutter Attendance Swipe | Pending |
+| SUB-07 | Phase 6 — Flutter Attendance Swipe | Pending |
+| SUB-08 | Phase 6 — Flutter Attendance Swipe | Pending |
+| STAT-01 | Phase 6 — Flutter Attendance Swipe | Pending |
+| STAT-02 | Phase 6 — Flutter Attendance Swipe | Pending |
+| STAT-03 | Phase 6 — Flutter Attendance Swipe | Pending |
+| RPT-01 | Phase 7 — Reports (Backend + Flutter) | Pending |
+| RPT-02 | Phase 7 — Reports (Backend + Flutter) | Pending |
+| RPT-03 | Phase 7 — Reports (Backend + Flutter) | Pending |
+| RPT-04 | Phase 7 — Reports (Backend + Flutter) | Pending |
+| RPT-05 | Phase 7 — Reports (Backend + Flutter) | Pending |
+| RPT-06 | Phase 7 — Reports (Backend + Flutter) | Pending |
+| RPT-07 | Phase 7 — Reports (Backend + Flutter) | Pending |
+| RPT-08 | Phase 7 — Reports (Backend + Flutter) | Pending |
+| RPT-09 | Phase 7 — Reports (Backend + Flutter) | Pending |
+| INFRA-05 | Phase 8 — Integration, QA + Hardening | Pending |
+| INFRA-06 | Phase 8 — Integration, QA + Hardening | Pending |
 
 **Coverage:**
 - v1 requirements: 56 total
 - Mapped to phases: 56
 - Unmapped: 0 ✓
 
+**Notes on cross-phase requirements:**
+- CLS-01 to CLS-05 and STU-01 to STU-06 each appear in Phase 3 (API) and Phase 5 (Flutter UI) — the API is the backend implementation, the Flutter screens are the delivery vehicle. Both phases must complete for the feature to be user-facing.
+- ATT-01 and SUB-05 through SUB-08 are backed by Phase 3 API endpoints and delivered through Phase 6 Flutter screens.
+- AUTH-08 through AUTH-10 are Flutter behaviors (silent refresh, network error routing) assigned to Phase 4; the underlying `/auth/refresh` endpoint is built in Phase 2.
+- INFRA-01 spans Phase 2 (JWT middleware on Go) and Phase 4 (Dio interceptor on Flutter); assigned to Phase 2 as the authoritative implementation.
+
 ---
 
 *Requirements defined: 2026-05-19*  
-*Last updated: 2026-05-19 after initial definition from PRD v1.0 + research synthesis*
+*Last updated: 2026-05-19 — traceability updated with per-requirement phase assignments after roadmap creation*
