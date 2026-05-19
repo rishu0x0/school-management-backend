@@ -10,27 +10,27 @@ See: .planning/PROJECT.md (updated 2026-05-19)
 ## Current Position
 
 Phase: 1 of 8 (Database Foundation)
-Plan: 0 of 3 in current phase
-Status: Ready to plan
-Last activity: 2026-05-19 — Roadmap created (8 phases, 56 requirements mapped)
+Plan: 1 of 3 in current phase
+Status: In progress
+Last activity: 2026-05-19 — Completed plan 01-01 (schema DDL migration + seed data)
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [█░░░░░░░░░] 4%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 0
-- Average duration: —
-- Total execution time: 0 hours
+- Total plans completed: 1
+- Average duration: 2 min
+- Total execution time: 0.03 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| - | - | - | - |
+| 01-database-foundation | 1 | 2 min | 2 min |
 
 **Recent Trend:**
-- Last 5 plans: —
+- Last 5 plans: 01-01 (2 min)
 - Trend: —
 
 *Updated after each plan completion*
@@ -46,6 +46,9 @@ Recent decisions affecting current work:
 - Phase 3/4 parallel: Flutter Auth Shell (Phase 4) can be built in parallel with Go CRUD API (Phase 3) — Flutter uses stub data
 - Phase 6: 1-day spike on `flutter_card_swiper v7` before committing to custom swipe widget
 - Phase 7: Prototype PDF 31-column A4 landscape layout before full implementation; validate format with a real school admin
+- 01-01: UNIQUE INDEX (not plain index) on refresh_tokens(token_hash) to prevent token hash collisions at DB level
+- 01-01: attendance_sessions.class_id has no ON DELETE CASCADE — orphan sessions intentionally preserved as audit trail
+- 01-01: attendance_records.student_id has no ON DELETE CASCADE — deleted students remain in historical attendance records
 
 ### Pending Todos
 
@@ -54,9 +57,10 @@ None yet.
 ### Blockers/Concerns
 
 - MSG91 DLT registration must be initiated immediately — it blocks all OTP production testing in Phase 2
+- Docker Desktop not installed — required for supabase db reset to run locally; blocks live schema verification and plan 01-02 execution
 
 ## Session Continuity
 
 Last session: 2026-05-19
-Stopped at: Roadmap written to ROADMAP.md, STATE.md initialized, REQUIREMENTS.md traceability updated
+Stopped at: Completed 01-01-PLAN.md — schema DDL migration and seed.sql created; Docker required for live db reset
 Resume file: None
