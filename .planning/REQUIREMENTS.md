@@ -25,11 +25,11 @@
 
 ### Classes (CLS)
 
-- [ ] **CLS-01**: Teacher can view a list of all their classes from the home/navigation entry point
-- [ ] **CLS-02**: Teacher can create a new class with name (required), section (optional), and subject (optional)
-- [ ] **CLS-03**: Teacher can edit a class name after creation
-- [ ] **CLS-04**: Teacher can delete a class; deletion shows confirmation warning that all student and attendance data will be permanently lost
-- [ ] **CLS-05**: Class names are unique within a teacher's account; teacher can have unlimited classes
+- [x] **CLS-01**: Teacher can view a list of all their classes from the home/navigation entry point
+- [x] **CLS-02**: Teacher can create a new class with name (required), section (optional), and subject (optional)
+- [x] **CLS-03**: Teacher can edit a class name after creation
+- [x] **CLS-04**: Teacher can delete a class; deletion shows confirmation warning that all student and attendance data will be permanently lost
+- [x] **CLS-05**: Class names are unique within a teacher's account; teacher can have unlimited classes
 
 ### Students (STU)
 
@@ -147,11 +147,11 @@
 | AUTH-13 | Phase 2 — Go Auth API | Complete |
 | INFRA-01 | Phase 2 — Go Auth API | Complete |
 | INFRA-02 | Phase 2 — Go Auth API | Complete |
-| CLS-01 | Phase 3 — Go CRUD API | Pending |
-| CLS-02 | Phase 3 — Go CRUD API | Pending |
-| CLS-03 | Phase 3 — Go CRUD API | Pending |
-| CLS-04 | Phase 3 — Go CRUD API | Pending |
-| CLS-05 | Phase 3 — Go CRUD API | Pending |
+| CLS-01 | Phase 3 — Go CRUD API | Complete |
+| CLS-02 | Phase 3 — Go CRUD API | Complete |
+| CLS-03 | Phase 3 — Go CRUD API | Complete |
+| CLS-04 | Phase 3 — Go CRUD API | Complete |
+| CLS-05 | Phase 3 — Go CRUD API | Complete |
 | STU-01 | Phase 3 — Go CRUD API | Pending |
 | STU-02 | Phase 3 — Go CRUD API | Pending |
 | STU-03 | Phase 3 — Go CRUD API | Pending |
@@ -167,11 +167,11 @@
 | AUTH-09 | Phase 4 — Flutter Auth Shell | Pending |
 | AUTH-10 | Phase 4 — Flutter Auth Shell | Complete |
 | INFRA-04 | Phase 4 — Flutter Auth Shell | Pending |
-| CLS-01 | Phase 5 — Flutter Class + Student Management | Pending |
-| CLS-02 | Phase 5 — Flutter Class + Student Management | Pending |
-| CLS-03 | Phase 5 — Flutter Class + Student Management | Pending |
-| CLS-04 | Phase 5 — Flutter Class + Student Management | Pending |
-| CLS-05 | Phase 5 — Flutter Class + Student Management | Pending |
+| CLS-01 | Phase 5 — Flutter Class + Student Management | Complete |
+| CLS-02 | Phase 5 — Flutter Class + Student Management | Complete |
+| CLS-03 | Phase 5 — Flutter Class + Student Management | Complete |
+| CLS-04 | Phase 5 — Flutter Class + Student Management | Complete |
+| CLS-05 | Phase 5 — Flutter Class + Student Management | Complete |
 | STU-01 | Phase 5 — Flutter Class + Student Management | Pending |
 | STU-02 | Phase 5 — Flutter Class + Student Management | Pending |
 | STU-03 | Phase 5 — Flutter Class + Student Management | Pending |

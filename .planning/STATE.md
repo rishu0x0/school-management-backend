@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-05-19)
 
 ## Current Position
 
-Phase: 2 of 8 (Go Auth API) — COMPLETE
-Plan: 4 of 4 in phase 02 (plan 02-04 complete — all Phase 2 plans done)
-Status: Phase 2 complete — beginning Phase 3 (Go CRUD API)
-Last activity: 2026-05-19 — Completed plan 02-04 (auth hardening: 60s OTP cooldown, bcrypt/lockout confirmation, logging audit, .env.example restoration)
+Phase: 3 of 8 (Go CRUD API) — In Progress
+Plan: 1 of 4 in phase 03 (plan 03-01 complete — classes CRUD)
+Status: Phase 3 in progress — 1 of 4 plans done (classes); students, attendance, stats remain
+Last activity: 2026-05-19 — Completed plan 03-01 (classes CRUD: service + handler + JWT-protected routes)
 
-Progress: [█████░░░░░] 37%
+Progress: [██████░░░░] 43%
 
 ## Performance Metrics
 
@@ -29,10 +29,11 @@ Progress: [█████░░░░░] 37%
 |-------|-------|-------|----------|
 | 01-database-foundation | 3 | 6 min | 2 min |
 | 02-go-auth-api | 4 | 14 min | 3.5 min |
+| 03-go-crud-api | 1 | 2 min | 2 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-03 (2 min), 02-01 (3 min), 02-02 (4 min), 02-03 (2 min), 02-04 (5 min)
-- Trend: —
+- Last 5 plans: 02-01 (3 min), 02-02 (4 min), 02-03 (2 min), 02-04 (5 min), 03-01 (2 min)
+- Trend: stable ~2-3 min/plan
 
 *Updated after each plan completion*
 
@@ -72,6 +73,9 @@ Recent decisions affecting current work:
 - 02-04: ErrRetryTooSoon checks last_retry_at only (not created_at) — initial send never sets last_retry_at so first retry is always allowed
 - 02-04: .env.example uses DATABASE_URL (not SUPABASE_DB_URL) — aligned with config.go requireEnv("DATABASE_URL")
 - 02-04: Logging audit: all existing log statements are safe (config/startup/db-connect) — no mobile data reaches log calls (INFRA-02 compliant)
+- [Phase 03-go-crud-api]: Duplicate name detection via Postgres error string matching — avoids TOCTOU race from separate existence check
+- [Phase 03-go-crud-api]: DELETE without confirm=true returns HTTP 200 with warning body (student count) — Flutter client shows dialog before retrying
+- [Phase 03-go-crud-api]: Classes CRUD in separate r.Group (not nested in /auth) — allows subsequent plans to append routes to same JWT-protected group
 
 ### Pending Todos
 
@@ -85,5 +89,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-05-19
-Stopped at: Completed 02-04-PLAN.md — auth hardening (60s OTP cooldown, bcrypt/lockout confirmation, logging audit, .env.example); Phase 2 ALL 4 PLANS COMPLETE
+Stopped at: Completed 03-01-PLAN.md — classes CRUD (service + handler + JWT-protected routes); Phase 3 plan 1/4 done
 Resume file: None
