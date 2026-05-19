@@ -218,3 +218,80 @@ func nullableString(s string) interface{} {
 	}
 	return s
 }
+
+// Login verifies mobile + password and issues tokens on success.
+// Returns ErrInvalidCredentials for any invalid combination (never reveals which field failed).
+func (s *Service) Login(ctx context.Context, mobile, password, deviceHint string) (accessToken, refreshToken string, err error) {
+	if !mobileRe.MatchString(mobile) {
+		return "", "", ErrInvalidCredentials
+	}
+
+	var teacherID, schoolName, passwordHash string
+	var isVerified bool
+	err = s.db.QueryRow(ctx,
+		`SELECT id, school_name, password_hash, is_verified FROM teachers WHERE mobile = $1`,
+		mobile,
+	).Scan(&teacherID, &schoolName, &passwordHash, &isVerified)
+	if err != nil {
+		// Teacher not found — return same error as wrong password
+		return "", "", ErrInvalidCredentials
+	}
+	if !isVerified {
+		return "", "", ErrInvalidCredentials
+	}
+
+	if err = bcrypt.CompareHashAndPassword([]byte(passwordHash), []byte(password)); err != nil {
+		return "", "", ErrInvalidCredentials
+	}
+
+	return s.issueTokens(ctx, teacherID, mobile, schoolName, deviceHint)
+}
+
+// Refresh validates the incoming refresh token and issues a new access token.
+// The refresh token row is updated with last_used_at but NOT rotated (non-expiring by design).
+func (s *Service) Refresh(ctx context.Context, rawRefreshToken string) (accessToken string, err error) {
+	if rawRefreshToken == "" {
+		return "", ErrInvalidCredentials
+	}
+
+	tokenHash := jwtpkg.HashToken(rawRefreshToken)
+
+	// Two-step: update last_used_at and get teacher_id, then fetch mobile/school_name
+	var teacherID string
+	err = s.db.QueryRow(ctx,
+		`UPDATE refresh_tokens SET last_used_at = NOW() WHERE token_hash = $1 RETURNING teacher_id`,
+		tokenHash,
+	).Scan(&teacherID)
+	if err != nil {
+		return "", ErrInvalidCredentials
+	}
+
+	var mobile, schoolName string
+	err = s.db.QueryRow(ctx,
+		`SELECT mobile, school_name FROM teachers WHERE id = $1`,
+		teacherID,
+	).Scan(&mobile, &schoolName)
+	if err != nil {
+		return "", ErrInvalidCredentials
+	}
+
+	accessToken, err = s.jwtSvc.GenerateAccessToken(teacherID, mobile, schoolName)
+	if err != nil {
+		return "", fmt.Errorf("generate access token: %w", err)
+	}
+	return accessToken, nil
+}
+
+// Logout deletes the current device's refresh token.
+// Other devices' refresh tokens are untouched (AUTH-12: multi-device).
+func (s *Service) Logout(ctx context.Context, rawRefreshToken string) error {
+	if rawRefreshToken == "" {
+		return nil
+	}
+	tokenHash := jwtpkg.HashToken(rawRefreshToken)
+	_, err := s.db.Exec(ctx,
+		`DELETE FROM refresh_tokens WHERE token_hash = $1`,
+		tokenHash,
+	)
+	return err
+}
