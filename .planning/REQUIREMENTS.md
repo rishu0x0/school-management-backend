@@ -84,8 +84,8 @@
 
 ### Infrastructure & Security (INFRA)
 
-- [ ] **INFRA-01**: All API endpoints except auth require valid JWT Bearer token; expired access tokens are silently refreshed using the stored refresh token
-- [ ] **INFRA-02**: Passwords stored as bcrypt hashes (cost factor 12); mobile numbers not logged in plaintext
+- [x] **INFRA-01**: All API endpoints except auth require valid JWT Bearer token; expired access tokens are silently refreshed using the stored refresh token
+- [x] **INFRA-02**: Passwords stored as bcrypt hashes (cost factor 12); mobile numbers not logged in plaintext
 - [x] **INFRA-03**: Supabase RLS enforced: teachers can only access data owned by their account (classes → students → attendance)
 - [ ] **INFRA-04**: App shows "No internet connection" with retry button when offline; no data loss during network interruption
 - [ ] **INFRA-05**: App cold start under 3 seconds; API read responses under 500ms; write operations under 1 second
@@ -145,8 +145,8 @@
 | AUTH-11 | Phase 2 — Go Auth API | Pending |
 | AUTH-12 | Phase 2 — Go Auth API | Pending |
 | AUTH-13 | Phase 2 — Go Auth API | Pending |
-| INFRA-01 | Phase 2 — Go Auth API | Pending |
-| INFRA-02 | Phase 2 — Go Auth API | Pending |
+| INFRA-01 | Phase 2 — Go Auth API | Complete |
+| INFRA-02 | Phase 2 — Go Auth API | Complete |
 | CLS-01 | Phase 3 — Go CRUD API | Pending |
 | CLS-02 | Phase 3 — Go CRUD API | Pending |
 | CLS-03 | Phase 3 — Go CRUD API | Pending |

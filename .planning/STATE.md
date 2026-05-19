@@ -5,32 +5,33 @@
 See: .planning/PROJECT.md (updated 2026-05-19)
 
 **Core value:** A teacher can open the app, swipe through their class in under 2 minutes, and have attendance recorded — with monthly reports generated automatically on the 1st of each month.
-**Current focus:** Phase 1 — Database Foundation
+**Current focus:** Phase 2 — Go Auth API
 
 ## Current Position
 
-Phase: 1 of 8 (Database Foundation)
-Plan: 3 of 3 in current phase (phase complete)
-Status: Phase 1 complete — all 3 plans done
-Last activity: 2026-05-19 — Completed plan 01-03 (triggers migration + .env.example)
+Phase: 2 of 8 (Go Auth API)
+Plan: 1 of 4 in current phase (plan 02-01 complete)
+Status: Phase 2 in progress — plan 02-01 done (scaffold), plans 02-02 through 02-04 remaining
+Last activity: 2026-05-19 — Completed plan 02-01 (Go scaffold, Chi router, pgx pool, /health, otp_sessions migration)
 
-Progress: [█░░░░░░░░░] 12%
+Progress: [██░░░░░░░░] 16%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 3
+- Total plans completed: 4
 - Average duration: 2 min
-- Total execution time: 0.10 hours
+- Total execution time: 0.13 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-database-foundation | 3 | 6 min | 2 min |
+| 02-go-auth-api | 1 | 3 min | 3 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (2 min), 01-02 (2 min), 01-03 (2 min)
+- Last 5 plans: 01-01 (2 min), 01-02 (2 min), 01-03 (2 min), 02-01 (3 min)
 - Trend: —
 
 *Updated after each plan completion*
@@ -56,6 +57,10 @@ Recent decisions affecting current work:
 - 01-03: BEFORE UPDATE (not AFTER) triggers — reject write before storage, not write-then-rollback
 - 01-03: SUPABASE_DB_URL uses port 5432 direct connection for pgxpool — pgxpool manages pooling, PgBouncer (6543) only if free tier limit hit
 - 01-03: pgxpool MaxConns=10 to stay within Supabase free tier 60-connection limit
+- 02-01: tools.go with //go:build tools retains golang-jwt/jwt/v5 and golang.org/x/crypto in go.mod before any source file imports them — go mod tidy prunes unused deps
+- 02-01: otp_sessions has no FK to teachers table — teacher row does not exist yet during registration flow
+- 02-01: req_id UNIQUE INDEX on otp_sessions — prevents duplicate MSG91 reqId inserts and allows fast verifyOTP lookup
+- 02-01: requireEnv() fatals at startup — server must not silently run with missing credentials
 
 ### Pending Todos
 
@@ -69,5 +74,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-05-19
-Stopped at: Completed 01-03-PLAN.md — triggers migration + .env.example + .gitignore + runbook created; Phase 1 complete (Docker required for live execution)
+Stopped at: Completed 02-01-PLAN.md — Go scaffold (Chi router, pgx pool, /health, config, db) + otp_sessions migration; Phase 2 plan 1 of 4 complete
 Resume file: None
