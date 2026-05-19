@@ -14,13 +14,13 @@
 - [x] **AUTH-03**: OTP screen shows 6-digit input, 60-second resend timer, max 3 resends per session; OTP expires in 10 minutes
 - [ ] **AUTH-04**: 3 incorrect OTP attempts lock the session with clear error message
 - [x] **AUTH-05**: After successful OTP verification, teacher is auto-logged in (tokens returned) and taken to Home Screen — no manual login step
-- [ ] **AUTH-06**: Teacher can log in with mobile number and password; valid credentials return JWT + refresh token and navigate to Home Screen
-- [ ] **AUTH-07**: Invalid login shows generic error ("Invalid mobile number or password") without revealing which field is wrong
-- [ ] **AUTH-08**: On every app launch, app silently uses stored refresh token to obtain fresh access token — teacher sees Home Screen without Login screen
+- [x] **AUTH-06**: Teacher can log in with mobile number and password; valid credentials return JWT + refresh token and navigate to Home Screen
+- [x] **AUTH-07**: Invalid login shows generic error ("Invalid mobile number or password") without revealing which field is wrong
+- [x] **AUTH-08**: On every app launch, app silently uses stored refresh token to obtain fresh access token — teacher sees Home Screen without Login screen
 - [ ] **AUTH-09**: On network error during silent refresh, app shows a retry screen — teacher is NOT redirected to Login
-- [ ] **AUTH-10**: Teacher is redirected to Login only when server explicitly rejects the refresh token (tampered or blacklisted)
-- [ ] **AUTH-11**: Teacher can log out from Settings; logout clears tokens from Flutter Secure Storage and invalidates refresh token server-side
-- [ ] **AUTH-12**: Multiple device logins supported — logging out on one device does not affect other device sessions
+- [x] **AUTH-10**: Teacher is redirected to Login only when server explicitly rejects the refresh token (tampered or blacklisted)
+- [x] **AUTH-11**: Teacher can log out from Settings; logout clears tokens from Flutter Secure Storage and invalidates refresh token server-side
+- [x] **AUTH-12**: Multiple device logins supported — logging out on one device does not affect other device sessions
 - [x] **AUTH-13**: Duplicate mobile number registration blocked with inline error: "This mobile number is already registered. Please login."
 
 ### Classes (CLS)
@@ -140,10 +140,10 @@
 | AUTH-03 | Phase 2 — Go Auth API | Complete |
 | AUTH-04 | Phase 2 — Go Auth API | Pending |
 | AUTH-05 | Phase 2 — Go Auth API | Complete |
-| AUTH-06 | Phase 2 — Go Auth API | Pending |
-| AUTH-07 | Phase 2 — Go Auth API | Pending |
-| AUTH-11 | Phase 2 — Go Auth API | Pending |
-| AUTH-12 | Phase 2 — Go Auth API | Pending |
+| AUTH-06 | Phase 2 — Go Auth API | Complete |
+| AUTH-07 | Phase 2 — Go Auth API | Complete |
+| AUTH-11 | Phase 2 — Go Auth API | Complete |
+| AUTH-12 | Phase 2 — Go Auth API | Complete |
 | AUTH-13 | Phase 2 — Go Auth API | Complete |
 | INFRA-01 | Phase 2 — Go Auth API | Complete |
 | INFRA-02 | Phase 2 — Go Auth API | Complete |
@@ -163,9 +163,9 @@
 | SUB-06 | Phase 3 — Go CRUD API | Pending |
 | SUB-07 | Phase 3 — Go CRUD API | Pending |
 | SUB-08 | Phase 3 — Go CRUD API | Pending |
-| AUTH-08 | Phase 4 — Flutter Auth Shell | Pending |
+| AUTH-08 | Phase 4 — Flutter Auth Shell | Complete |
 | AUTH-09 | Phase 4 — Flutter Auth Shell | Pending |
-| AUTH-10 | Phase 4 — Flutter Auth Shell | Pending |
+| AUTH-10 | Phase 4 — Flutter Auth Shell | Complete |
 | INFRA-04 | Phase 4 — Flutter Auth Shell | Pending |
 | CLS-01 | Phase 5 — Flutter Class + Student Management | Pending |
 | CLS-02 | Phase 5 — Flutter Class + Student Management | Pending |

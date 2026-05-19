@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-05-19)
 ## Current Position
 
 Phase: 2 of 8 (Go Auth API)
-Plan: 2 of 4 in current phase (plan 02-02 complete)
-Status: Phase 2 in progress — plans 02-01 and 02-02 done, plans 02-03 and 02-04 remaining
-Last activity: 2026-05-19 — Completed plan 02-02 (MSG91 OTP client, JWT service, registration endpoints, auth routes wired)
+Plan: 3 of 4 in current phase (plan 02-03 complete)
+Status: Phase 2 in progress — plans 02-01, 02-02, and 02-03 done, plan 02-04 remaining
+Last activity: 2026-05-19 — Completed plan 02-03 (Login/Refresh/Logout service+handlers, full JWT middleware replacing stub)
 
-Progress: [███░░░░░░░] 22%
+Progress: [████░░░░░░] 31%
 
 ## Performance Metrics
 
@@ -28,10 +28,10 @@ Progress: [███░░░░░░░] 22%
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-database-foundation | 3 | 6 min | 2 min |
-| 02-go-auth-api | 2 | 7 min | 3.5 min |
+| 02-go-auth-api | 3 | 9 min | 3 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (2 min), 01-02 (2 min), 01-03 (2 min), 02-01 (3 min), 02-02 (4 min)
+- Last 5 plans: 01-02 (2 min), 01-03 (2 min), 02-01 (3 min), 02-02 (4 min), 02-03 (2 min)
 - Trend: —
 
 *Updated after each plan completion*
@@ -65,6 +65,10 @@ Recent decisions affecting current work:
 - 02-02: OTP attempt lockout checked before calling MSG91 VerifyOTP — avoids unnecessary external API calls on locked sessions
 - 02-02: JWTMiddleware stub in middleware.go allows /auth/logout route to compile; full enforcement in 02-03
 - 02-02: Refresh token stored as SHA-256 hash only — raw token returned to client once, never persisted
+- 02-03: Two-step Refresh query (UPDATE then SELECT) chosen over subquery RETURNING — more portable and readable
+- 02-03: Login validates mobile format before DB query — avoids unnecessary query on obviously invalid input
+- 02-03: JWTMiddleware returns 401 (not 403) for all token failures — prevents route existence leakage
+- 02-03: contextKey typed string (not plain string) — compile-time safety for context key lookups
 
 ### Pending Todos
 
@@ -78,5 +82,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-05-19
-Stopped at: Completed 02-02-PLAN.md — MSG91 OTP client, JWT service, registration flow endpoints, auth routes wired in main.go; Phase 2 plan 2 of 4 complete
+Stopped at: Completed 02-03-PLAN.md — Login/Refresh/Logout service methods and handlers, full JWT middleware; Phase 2 plan 3 of 4 complete
 Resume file: None
