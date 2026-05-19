@@ -12,7 +12,7 @@ Eight phases take this project from a blank Supabase schema to a production-read
 
 Phases execute in numeric order. Phase 3 and Phase 4 can be developed in parallel.
 
-- [x] **Phase 1: Database Foundation** (2/3 plans complete) - Supabase schema, RLS policies, and migrations — everything else builds on this
+- [x] **Phase 1: Database Foundation** (3/3 plans complete) - Supabase schema, RLS policies, and migrations — everything else builds on this
 - [ ] **Phase 2: Go Auth API** - JWT authentication, MSG91 OTP, refresh token table, and all auth endpoints
 - [ ] **Phase 3: Go CRUD API** - Classes, students, attendance endpoints, IST midnight lock, and report generation backend
 - [ ] **Phase 4: Flutter Auth Shell** - Routing, auth guard, JWT refresh interceptor, login and registration screens
@@ -38,7 +38,7 @@ Phases execute in numeric order. Phase 3 and Phase 4 can be developed in paralle
 Plans:
 - [x] 01-01-PLAN.md — DDL migration: all 7 tables with constraints, indexes, and seed data
 - [x] 01-02-PLAN.md — RLS policies for all 7 tables; two-teacher isolation test
-- [ ] 01-03-PLAN.md — Triggers migration (midnight lock), remote db push, .env.example
+- [x] 01-03-PLAN.md — Triggers migration (midnight lock), remote db push, .env.example
 
 ### Phase 2: Go Auth API
 **Goal**: A running Go server that handles teacher registration with MSG91 OTP, login, silent refresh, logout, and all JWT middleware — teachers can create accounts and authenticate
@@ -175,7 +175,7 @@ Note: Phase 3 and Phase 4 can be developed in parallel — Flutter Auth Shell do
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Database Foundation | 2/3 | In progress | - |
+| 1. Database Foundation | 3/3 | Complete | 2026-05-19 |
 | 2. Go Auth API | 0/4 | Not started | - |
 | 3. Go CRUD API | 0/4 | Not started | - |
 | 4. Flutter Auth Shell | 0/4 | Not started | - |
