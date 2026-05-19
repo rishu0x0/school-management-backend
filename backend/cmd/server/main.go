@@ -14,6 +14,7 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/joho/godotenv"
 	"school-management/backend/internal/auth"
+	"school-management/backend/internal/classes"
 	"school-management/backend/internal/config"
 	"school-management/backend/internal/db"
 	"school-management/backend/internal/msg91"
@@ -44,6 +45,9 @@ func main() {
 	authSvc := auth.NewService(pool, jwtSvc, msg91Client)
 	authHandler := auth.NewHandler(authSvc)
 
+	classSvc := classes.NewService(pool)
+	classHandler := classes.NewHandler(classSvc)
+
 	r.Route("/auth", func(r chi.Router) {
 		r.Post("/register/send-otp", authHandler.SendRegistrationOTP)
 		r.Post("/register/verify-otp", authHandler.VerifyRegistrationOTP)
@@ -54,6 +58,19 @@ func main() {
 			r.Use(auth.JWTMiddleware(jwtSvc))
 			r.Post("/logout", authHandler.Logout)
 		})
+	})
+
+	// Protected routes — JWT required for all endpoints below
+	r.Group(func(r chi.Router) {
+		r.Use(auth.JWTMiddleware(jwtSvc))
+
+		// Classes CRUD
+		r.Get("/classes", classHandler.List)
+		r.Post("/classes", classHandler.Create)
+		r.Put("/classes/{classID}", classHandler.Update)
+		r.Delete("/classes/{classID}", classHandler.Delete)
+
+		// Students, Attendance, Stats will be added in plans 03-02 through 03-04
 	})
 
 	srv := &http.Server{
