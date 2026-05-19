@@ -127,6 +127,10 @@ func (h *Handler) RetryOTP(w http.ResponseWriter, r *http.Request) {
 			writeError(w, http.StatusBadRequest, "session_invalid", "OTP session not found or expired")
 			return
 		}
+		if errors.Is(err, ErrRetryTooSoon) {
+			writeError(w, http.StatusTooManyRequests, "retry_too_soon", "Please wait before requesting another OTP")
+			return
+		}
 		writeError(w, http.StatusInternalServerError, "internal_error", "Failed to retry OTP")
 		return
 	}

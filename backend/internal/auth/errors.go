@@ -14,6 +14,7 @@ var (
 	ErrOTPLocked            = errors.New("otp_locked")
 	ErrOTPInvalid           = errors.New("otp_invalid")
 	ErrInvalidCredentials   = errors.New("invalid_credentials")
+	ErrRetryTooSoon         = errors.New("retry_too_soon")
 )
 
 type ValidationError struct {

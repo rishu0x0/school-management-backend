@@ -128,19 +128,26 @@ func (s *Service) VerifyRegistrationOTP(ctx context.Context, reqID, otp, name, m
 	return s.issueTokens(ctx, teacherID, mobile, schoolName, "")
 }
 
-// RetryOTP triggers a resend of the OTP via MSG91.
+// RetryOTP triggers a resend of the OTP via MSG91, enforcing a 60-second cooldown between retries.
 func (s *Service) RetryOTP(ctx context.Context, reqID string, retryChannel int) error {
 	var expiresAt time.Time
 	var isUsed bool
+	var lastRetryAt *time.Time
+
 	err := s.db.QueryRow(ctx,
-		`SELECT expires_at, is_used FROM otp_sessions WHERE req_id = $1`,
+		`SELECT expires_at, is_used, last_retry_at FROM otp_sessions WHERE req_id = $1`,
 		reqID,
-	).Scan(&expiresAt, &isUsed)
+	).Scan(&expiresAt, &isUsed, &lastRetryAt)
 	if err != nil {
 		return ErrSessionNotFound
 	}
 	if isUsed || time.Now().After(expiresAt) {
 		return ErrSessionExpiredOrUsed
+	}
+
+	// Enforce 60-second cooldown between retries
+	if lastRetryAt != nil && time.Since(*lastRetryAt) < 60*time.Second {
+		return ErrRetryTooSoon
 	}
 
 	if err = s.msg91.RetryOTP(ctx, reqID, retryChannel); err != nil {
