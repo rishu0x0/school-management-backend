@@ -13,6 +13,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/joho/godotenv"
+	"school-management/backend/internal/attendance"
 	"school-management/backend/internal/auth"
 	"school-management/backend/internal/classes"
 	"school-management/backend/internal/config"
@@ -52,6 +53,9 @@ func main() {
 	studentSvc := students.NewService(pool)
 	studentHandler := students.NewHandler(studentSvc)
 
+	attendanceSvc := attendance.NewService(pool)
+	attendanceHandler := attendance.NewHandler(attendanceSvc)
+
 	r.Route("/auth", func(r chi.Router) {
 		r.Post("/register/send-otp", authHandler.SendRegistrationOTP)
 		r.Post("/register/verify-otp", authHandler.VerifyRegistrationOTP)
@@ -81,7 +85,12 @@ func main() {
 		r.Delete("/classes/{classID}/students/{studentID}", studentHandler.SoftRemove)
 		r.Post("/classes/{classID}/students/seed", studentHandler.Seed)
 
-		// Attendance, Stats will be added in plans 03-03 through 03-04
+		// Attendance (plan 03-03)
+		r.Get("/classes/{classID}/attendance", attendanceHandler.GetByDate)
+		r.Post("/classes/{classID}/attendance", attendanceHandler.SubmitBatch)
+		r.Put("/classes/{classID}/attendance/{sessionID}", attendanceHandler.EditRecords)
+
+		// Stats will be added in plan 03-04
 	})
 
 	srv := &http.Server{
