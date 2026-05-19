@@ -17,9 +17,10 @@ import (
 	"school-management/backend/internal/auth"
 	"school-management/backend/internal/classes"
 	"school-management/backend/internal/config"
-	"school-management/backend/internal/students"
 	"school-management/backend/internal/db"
 	"school-management/backend/internal/msg91"
+	"school-management/backend/internal/stats"
+	"school-management/backend/internal/students"
 	jwtpkg "school-management/backend/pkg/jwt"
 )
 
@@ -56,6 +57,9 @@ func main() {
 	attendanceSvc := attendance.NewService(pool)
 	attendanceHandler := attendance.NewHandler(attendanceSvc)
 
+	statsSvc := stats.NewService(pool)
+	statsHandler := stats.NewHandler(statsSvc)
+
 	r.Route("/auth", func(r chi.Router) {
 		r.Post("/register/send-otp", authHandler.SendRegistrationOTP)
 		r.Post("/register/verify-otp", authHandler.VerifyRegistrationOTP)
@@ -90,7 +94,9 @@ func main() {
 		r.Post("/classes/{classID}/attendance", attendanceHandler.SubmitBatch)
 		r.Put("/classes/{classID}/attendance/{sessionID}", attendanceHandler.EditRecords)
 
-		// Stats will be added in plan 03-04
+		// Stats (plan 03-04)
+		r.Get("/classes/{classID}/stats/today", statsHandler.Today)
+		r.Get("/classes/{classID}/stats/monthly", statsHandler.Monthly)
 	})
 
 	srv := &http.Server{
