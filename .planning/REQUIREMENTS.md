@@ -159,6 +159,9 @@
 | STU-05 | Phase 3 — Go CRUD API | Complete |
 | STU-06 | Phase 3 — Go CRUD API | Complete |
 | ATT-01 | Phase 3 — Go CRUD API | Complete |
+| STAT-01 | Phase 3 — Go CRUD API (backend API) | Complete |
+| STAT-02 | Phase 3 — Go CRUD API (backend API) | Complete |
+| STAT-03 | Phase 3 — Go CRUD API (backend API) | Complete |
 | SUB-05 | Phase 3 — Go CRUD API | Complete |
 | SUB-06 | Phase 3 — Go CRUD API | Complete |
 | SUB-07 | Phase 3 — Go CRUD API | Complete |

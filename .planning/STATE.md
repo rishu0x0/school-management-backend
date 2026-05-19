@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-05-19)
 
 **Core value:** A teacher can open the app, swipe through their class in under 2 minutes, and have attendance recorded — with monthly reports generated automatically on the 1st of each month.
-**Current focus:** Phase 3 — Go CRUD API (Phase 2 complete)
+**Current focus:** Phase 4 — Flutter Auth Shell (Phase 3 complete)
 
 ## Current Position
 
-Phase: 3 of 8 (Go CRUD API) — In Progress
-Plan: 3 of 4 in phase 03 (plan 03-03 complete — attendance CRUD)
-Status: Phase 3 in progress — 3 of 4 plans done (classes, students, attendance); stats remain
-Last activity: 2026-05-19 — Completed plan 03-03 (attendance CRUD: IST timezone pkg, service, handler, 3 JWT-protected routes)
+Phase: 3 of 8 (Go CRUD API) — Complete
+Plan: 4 of 4 in phase 03 (plan 03-04 complete — stats endpoints)
+Status: Phase 3 complete — all 4 plans done (classes, students, attendance, stats); ready for Phase 4
+Last activity: 2026-05-19 — Completed plan 03-04 (stats endpoints: TodaySummary, MonthlySummary, 2 JWT-protected routes; Phase 3 done)
 
-Progress: [███████░░░] 50%
+Progress: [████████░░] 62%
 
 ## Performance Metrics
 
@@ -29,7 +29,7 @@ Progress: [███████░░░] 50%
 |-------|-------|-------|----------|
 | 01-database-foundation | 3 | 6 min | 2 min |
 | 02-go-auth-api | 4 | 14 min | 3.5 min |
-| 03-go-crud-api | 1 | 2 min | 2 min |
+| 03-go-crud-api | 4 | 8 min | 2 min |
 
 **Recent Trend:**
 - Last 5 plans: 02-01 (3 min), 02-02 (4 min), 02-03 (2 min), 02-04 (5 min), 03-01 (2 min)
@@ -84,6 +84,9 @@ Recent decisions affecting current work:
 - [Phase 03-go-crud-api]: IST lock enforced in Go (timezone.IsLocked) before any DB write — triggers also lock at DB level but Go check is the primary API enforcement
 - [Phase 03-go-crud-api]: Postgres DATE column scanned as time.Time (pgx behavior) — formatted as YYYY-MM-DD string for JSON response
 - [Phase 03-go-crud-api]: GetByDate returns HTTP 200 with null session for empty days — Flutter swipe UI handles no-attendance state gracefully without 404 error handling
+- [Phase 03-go-crud-api 03-04]: Monthly IN subquery (not LEFT JOIN on sessions) — avoids date filter being ineffective in LEFT JOIN ON condition; IN subquery correctly scopes present_days to the requested month
+- [Phase 03-go-crud-api 03-04]: attendance_percentage denominator is days_recorded (session days for month) not student-observed days — consistent cross-student comparison, avoids divide-by-zero
+- [Phase 03-go-crud-api 03-04]: TodaySummary returns 200 + zeros (not 404) when no session exists — Flutter Statistics screen uses submitted:false flag to show "No attendance recorded" state
 
 ### Pending Todos
 
@@ -97,5 +100,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-05-19
-Stopped at: Completed 03-03-PLAN.md — attendance CRUD (IST timezone pkg, service, handler, 3 routes wired); Phase 3 plan 3/4 done
+Stopped at: Completed 03-04-PLAN.md — stats endpoints (TodaySummary, MonthlySummary, 2 JWT-protected routes, (Removed) display); Phase 3 complete
 Resume file: None

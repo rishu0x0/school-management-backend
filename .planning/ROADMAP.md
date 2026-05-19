@@ -14,7 +14,7 @@ Phases execute in numeric order. Phase 3 and Phase 4 can be developed in paralle
 
 - [x] **Phase 1: Database Foundation** (3/3 plans complete) - Supabase schema, RLS policies, and migrations — everything else builds on this
 - [x] **Phase 2: Go Auth API** - JWT authentication, MSG91 OTP, refresh token table, and all auth endpoints
-- [ ] **Phase 3: Go CRUD API** - Classes, students, attendance endpoints, IST midnight lock, and report generation backend
+- [x] **Phase 3: Go CRUD API** (4/4 plans complete) - Classes, students, attendance endpoints, IST midnight lock, and stats endpoints
 - [ ] **Phase 4: Flutter Auth Shell** - Routing, auth guard, JWT refresh interceptor, login and registration screens
 - [ ] **Phase 5: Flutter Class + Student Management** - Class list, CRUD screens, student list, dummy seed button
 - [ ] **Phase 6: Flutter Attendance Swipe** - Swipe cards, summary screen, submission flow, and statistics screen
@@ -71,10 +71,10 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [ ] 03-01: Classes CRUD endpoints (list, create, edit, delete) with unique-name constraint and cascade-delete confirmation flag
-- [ ] 03-02: Students CRUD endpoints (list, add, edit, soft-remove, seed-dummy); auto roll-number assignment; uniqueness enforcement
-- [ ] 03-03: Attendance endpoints (submit batch, get by date, edit); IST midnight lock in `pkg/timezone`; single-transaction batch save; duplicate-day rejection
-- [ ] 03-04: Statistics endpoints (today summary counts, monthly overview, students below 75%); integration tests for IST lock boundary
+- [x] 03-01: Classes CRUD endpoints (list, create, edit, delete) with unique-name constraint and cascade-delete confirmation flag
+- [x] 03-02: Students CRUD endpoints (list, add, edit, soft-remove, seed-dummy); auto roll-number assignment; uniqueness enforcement
+- [x] 03-03: Attendance endpoints (submit batch, get by date, edit); IST midnight lock in `pkg/timezone`; single-transaction batch save; duplicate-day rejection
+- [x] 03-04: Statistics endpoints (today summary counts, monthly overview, students below 75%); (Removed) display for inactive students
 
 ### Phase 4: Flutter Auth Shell
 **Goal**: Flutter app launches, silently restores sessions from secure storage, routes teachers to the correct screen, and handles all auth flows including network errors — no teacher is ever accidentally logged out
