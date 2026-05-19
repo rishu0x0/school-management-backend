@@ -33,12 +33,12 @@ Phases execute in numeric order. Phase 3 and Phase 4 can be developed in paralle
   3. Migration files are version-controlled and `supabase db reset` reproduces the full schema cleanly
   4. All foreign key constraints, unique constraints (e.g., roll number unique per class, class name unique per teacher), and check constraints are in place
   5. Service role key grants full access (used by Go backend); anon key is restricted to zero rows by RLS
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 01-01: Design and write all table migrations (teachers, refresh_tokens, classes, students, attendance_records, reports)
-- [ ] 01-02: Write and apply RLS policies for all tables; verify isolation with two-teacher test queries
-- [ ] 01-03: Version-control migrations, validate schema with `supabase db reset`, document connection string setup
+- [ ] 01-01-PLAN.md — DDL migration: all 7 tables with constraints, indexes, and seed data
+- [ ] 01-02-PLAN.md — RLS policies for all 7 tables; two-teacher isolation test
+- [ ] 01-03-PLAN.md — Triggers migration (midnight lock), remote db push, .env.example
 
 ### Phase 2: Go Auth API
 **Goal**: A running Go server that handles teacher registration with MSG91 OTP, login, silent refresh, logout, and all JWT middleware — teachers can create accounts and authenticate
