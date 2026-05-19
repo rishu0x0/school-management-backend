@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-05-19)
 ## Current Position
 
 Phase: 3 of 8 (Go CRUD API) — In Progress
-Plan: 1 of 4 in phase 03 (plan 03-01 complete — classes CRUD)
-Status: Phase 3 in progress — 1 of 4 plans done (classes); students, attendance, stats remain
-Last activity: 2026-05-19 — Completed plan 03-01 (classes CRUD: service + handler + JWT-protected routes)
+Plan: 2 of 4 in phase 03 (plan 03-02 complete — students CRUD)
+Status: Phase 3 in progress — 2 of 4 plans done (classes, students); attendance, stats remain
+Last activity: 2026-05-19 — Completed plan 03-02 (students CRUD: service + handler + JWT-protected routes)
 
 Progress: [██████░░░░] 43%
 
@@ -36,6 +36,7 @@ Progress: [██████░░░░] 43%
 - Trend: stable ~2-3 min/plan
 
 *Updated after each plan completion*
+| Phase 03-go-crud-api P02 | 2 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -76,6 +77,9 @@ Recent decisions affecting current work:
 - [Phase 03-go-crud-api]: Duplicate name detection via Postgres error string matching — avoids TOCTOU race from separate existence check
 - [Phase 03-go-crud-api]: DELETE without confirm=true returns HTTP 200 with warning body (student count) — Flutter client shows dialog before retrying
 - [Phase 03-go-crud-api]: Classes CRUD in separate r.Group (not nested in /auth) — allows subsequent plans to append routes to same JWT-protected group
+- [Phase 03-go-crud-api]: students table has no updated_at column — Update builds empty setClauses and only appends caller-provided fields
+- [Phase 03-go-crud-api]: SoftRemove sets is_active=false (not DELETE) — attendance_records.student_id has no CASCADE; deleting rows would orphan history
+- [Phase 03-go-crud-api]: Seed uses ON CONFLICT (class_id, roll_number) DO NOTHING — idempotent; RowsAffected() counts actual inserts
 
 ### Pending Todos
 
@@ -89,5 +93,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-05-19
-Stopped at: Completed 03-01-PLAN.md — classes CRUD (service + handler + JWT-protected routes); Phase 3 plan 1/4 done
+Stopped at: Completed 03-02-PLAN.md — students CRUD (service + handler + JWT-protected routes); Phase 3 plan 2/4 done
 Resume file: None

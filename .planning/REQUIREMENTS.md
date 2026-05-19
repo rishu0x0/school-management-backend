@@ -33,12 +33,12 @@
 
 ### Students (STU)
 
-- [ ] **STU-01**: Teacher can view a list of all students in a class, ordered by roll number
-- [ ] **STU-02**: Teacher can add a single student to a class with full name (required) and optional roll number (auto-assigned if omitted) and photo
-- [ ] **STU-03**: Teacher can edit a student's name, roll number, or photo
-- [ ] **STU-04**: Teacher can remove a student from a class; removal does not delete historical attendance records (student shown as "(Removed)" in past reports)
-- [ ] **STU-05**: Teacher can generate N dummy students for a class via "Generate Test Students" button (default 30); each gets auto-incremented roll number and dummy name
-- [ ] **STU-06**: Each student belongs to exactly one class; roll numbers are unique within a class
+- [x] **STU-01**: Teacher can view a list of all students in a class, ordered by roll number
+- [x] **STU-02**: Teacher can add a single student to a class with full name (required) and optional roll number (auto-assigned if omitted) and photo
+- [x] **STU-03**: Teacher can edit a student's name, roll number, or photo
+- [x] **STU-04**: Teacher can remove a student from a class; removal does not delete historical attendance records (student shown as "(Removed)" in past reports)
+- [x] **STU-05**: Teacher can generate N dummy students for a class via "Generate Test Students" button (default 30); each gets auto-incremented roll number and dummy name
+- [x] **STU-06**: Each student belongs to exactly one class; roll numbers are unique within a class
 
 ### Attendance — Swipe (ATT)
 
@@ -152,12 +152,12 @@
 | CLS-03 | Phase 3 — Go CRUD API | Complete |
 | CLS-04 | Phase 3 — Go CRUD API | Complete |
 | CLS-05 | Phase 3 — Go CRUD API | Complete |
-| STU-01 | Phase 3 — Go CRUD API | Pending |
-| STU-02 | Phase 3 — Go CRUD API | Pending |
-| STU-03 | Phase 3 — Go CRUD API | Pending |
-| STU-04 | Phase 3 — Go CRUD API | Pending |
-| STU-05 | Phase 3 — Go CRUD API | Pending |
-| STU-06 | Phase 3 — Go CRUD API | Pending |
+| STU-01 | Phase 3 — Go CRUD API | Complete |
+| STU-02 | Phase 3 — Go CRUD API | Complete |
+| STU-03 | Phase 3 — Go CRUD API | Complete |
+| STU-04 | Phase 3 — Go CRUD API | Complete |
+| STU-05 | Phase 3 — Go CRUD API | Complete |
+| STU-06 | Phase 3 — Go CRUD API | Complete |
 | ATT-01 | Phase 3 — Go CRUD API | Pending |
 | SUB-05 | Phase 3 — Go CRUD API | Pending |
 | SUB-06 | Phase 3 — Go CRUD API | Pending |
@@ -172,12 +172,12 @@
 | CLS-03 | Phase 5 — Flutter Class + Student Management | Complete |
 | CLS-04 | Phase 5 — Flutter Class + Student Management | Complete |
 | CLS-05 | Phase 5 — Flutter Class + Student Management | Complete |
-| STU-01 | Phase 5 — Flutter Class + Student Management | Pending |
-| STU-02 | Phase 5 — Flutter Class + Student Management | Pending |
-| STU-03 | Phase 5 — Flutter Class + Student Management | Pending |
-| STU-04 | Phase 5 — Flutter Class + Student Management | Pending |
-| STU-05 | Phase 5 — Flutter Class + Student Management | Pending |
-| STU-06 | Phase 5 — Flutter Class + Student Management | Pending |
+| STU-01 | Phase 5 — Flutter Class + Student Management | Complete |
+| STU-02 | Phase 5 — Flutter Class + Student Management | Complete |
+| STU-03 | Phase 5 — Flutter Class + Student Management | Complete |
+| STU-04 | Phase 5 — Flutter Class + Student Management | Complete |
+| STU-05 | Phase 5 — Flutter Class + Student Management | Complete |
+| STU-06 | Phase 5 — Flutter Class + Student Management | Complete |
 | ATT-01 | Phase 6 — Flutter Attendance Swipe | Pending |
 | ATT-02 | Phase 6 — Flutter Attendance Swipe | Pending |
 | ATT-03 | Phase 6 — Flutter Attendance Swipe | Pending |
