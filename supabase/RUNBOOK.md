@@ -1,11 +1,17 @@
 # Supabase Runbook — Phase 1 Database Foundation
 
-All commands below require Docker Desktop to be running.
-Install: https://docs.docker.com/desktop/install/mac-install/
+**Using Supabase Cloud (not local Docker).** Credentials are in `.env`.
+
+To apply migrations to the cloud project:
+
+```bash
+supabase link --project-ref <your-project-ref>
+supabase db push
+```
 
 ---
 
-## Step 1: Start Local Supabase
+## Step 1 (Cloud): Apply Migrations
 
 ```bash
 cd "/Users/rishujain/Desktop/Everything/School Management"
