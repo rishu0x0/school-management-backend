@@ -13,8 +13,11 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/joho/godotenv"
+	"school-management/backend/internal/auth"
 	"school-management/backend/internal/config"
 	"school-management/backend/internal/db"
+	"school-management/backend/internal/msg91"
+	jwtpkg "school-management/backend/pkg/jwt"
 )
 
 func main() {
@@ -23,6 +26,9 @@ func main() {
 	cfg := config.Load()
 	pool := db.NewPool(cfg.DatabaseURL)
 	defer pool.Close()
+
+	jwtSvc := jwtpkg.New(cfg.JWTSecret, cfg.JWTAccessExpiry)
+	msg91Client := msg91.New(cfg.MSG91AuthToken, cfg.MSG91WidgetID)
 
 	r := chi.NewRouter()
 	r.Use(middleware.RequestID)
@@ -35,9 +41,19 @@ func main() {
 		json.NewEncoder(w).Encode(map[string]string{"status": "ok"})
 	})
 
-	// Auth routes registered in Plan 02-02
+	authSvc := auth.NewService(pool, jwtSvc, msg91Client)
+	authHandler := auth.NewHandler(authSvc)
+
 	r.Route("/auth", func(r chi.Router) {
-		// Populated in 02-02 and 02-03
+		r.Post("/register/send-otp", authHandler.SendRegistrationOTP)
+		r.Post("/register/verify-otp", authHandler.VerifyRegistrationOTP)
+		r.Post("/otp/retry", authHandler.RetryOTP)
+		r.Post("/login", authHandler.Login)
+		r.Post("/refresh", authHandler.Refresh)
+		r.Group(func(r chi.Router) {
+			r.Use(auth.JWTMiddleware(jwtSvc))
+			r.Post("/logout", authHandler.Logout)
+		})
 	})
 
 	srv := &http.Server{
