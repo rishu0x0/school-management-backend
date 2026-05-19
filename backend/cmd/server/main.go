@@ -16,6 +16,7 @@ import (
 	"school-management/backend/internal/auth"
 	"school-management/backend/internal/classes"
 	"school-management/backend/internal/config"
+	"school-management/backend/internal/students"
 	"school-management/backend/internal/db"
 	"school-management/backend/internal/msg91"
 	jwtpkg "school-management/backend/pkg/jwt"
@@ -48,6 +49,9 @@ func main() {
 	classSvc := classes.NewService(pool)
 	classHandler := classes.NewHandler(classSvc)
 
+	studentSvc := students.NewService(pool)
+	studentHandler := students.NewHandler(studentSvc)
+
 	r.Route("/auth", func(r chi.Router) {
 		r.Post("/register/send-otp", authHandler.SendRegistrationOTP)
 		r.Post("/register/verify-otp", authHandler.VerifyRegistrationOTP)
@@ -70,7 +74,14 @@ func main() {
 		r.Put("/classes/{classID}", classHandler.Update)
 		r.Delete("/classes/{classID}", classHandler.Delete)
 
-		// Students, Attendance, Stats will be added in plans 03-02 through 03-04
+		// Students CRUD (plan 03-02)
+		r.Get("/classes/{classID}/students", studentHandler.List)
+		r.Post("/classes/{classID}/students", studentHandler.Create)
+		r.Put("/classes/{classID}/students/{studentID}", studentHandler.Update)
+		r.Delete("/classes/{classID}/students/{studentID}", studentHandler.SoftRemove)
+		r.Post("/classes/{classID}/students/seed", studentHandler.Seed)
+
+		// Attendance, Stats will be added in plans 03-03 through 03-04
 	})
 
 	srv := &http.Server{
