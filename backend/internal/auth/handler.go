@@ -134,17 +134,76 @@ func (h *Handler) RetryOTP(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, map[string]bool{"success": true})
 }
 
-// Placeholder handlers for 02-03
+type loginRequest struct {
+	Mobile     string `json:"mobile"`
+	Password   string `json:"password"`
+	DeviceHint string `json:"device_hint"`
+}
+
 func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
-	writeError(w, http.StatusNotImplemented, "not_implemented", "Login endpoint coming in 02-03")
+	var req loginRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		writeError(w, http.StatusBadRequest, "invalid_json", "request body is not valid JSON")
+		return
+	}
+
+	accessToken, refreshToken, err := h.svc.Login(r.Context(), req.Mobile, req.Password, req.DeviceHint)
+	if err != nil {
+		if errors.Is(err, ErrInvalidCredentials) {
+			writeError(w, http.StatusUnauthorized, "invalid_credentials", "Invalid mobile number or password")
+			return
+		}
+		writeError(w, http.StatusInternalServerError, "internal_error", "Login failed")
+		return
+	}
+
+	writeJSON(w, http.StatusOK, tokenResponse{
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+	})
+}
+
+type refreshRequest struct {
+	RefreshToken string `json:"refresh_token"`
+}
+
+type refreshResponse struct {
+	AccessToken string `json:"access_token"`
 }
 
 func (h *Handler) Refresh(w http.ResponseWriter, r *http.Request) {
-	writeError(w, http.StatusNotImplemented, "not_implemented", "Refresh endpoint coming in 02-03")
+	var req refreshRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		writeError(w, http.StatusBadRequest, "invalid_json", "request body is not valid JSON")
+		return
+	}
+
+	accessToken, err := h.svc.Refresh(r.Context(), req.RefreshToken)
+	if err != nil {
+		writeError(w, http.StatusUnauthorized, "invalid_token", "Refresh token is invalid or has been revoked")
+		return
+	}
+
+	writeJSON(w, http.StatusOK, refreshResponse{AccessToken: accessToken})
+}
+
+type logoutRequest struct {
+	RefreshToken string `json:"refresh_token"`
 }
 
 func (h *Handler) Logout(w http.ResponseWriter, r *http.Request) {
-	writeError(w, http.StatusNotImplemented, "not_implemented", "Logout endpoint coming in 02-03")
+	var req logoutRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		writeError(w, http.StatusBadRequest, "invalid_json", "request body is not valid JSON")
+		return
+	}
+
+	if err := h.svc.Logout(r.Context(), req.RefreshToken); err != nil {
+		writeError(w, http.StatusInternalServerError, "internal_error", "Logout failed")
+		return
+	}
+
+	writeJSON(w, http.StatusOK, map[string]bool{"success": true})
 }
 
 func writeJSON(w http.ResponseWriter, status int, v interface{}) {
