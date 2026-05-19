@@ -54,7 +54,7 @@ Plans:
 
 Plans:
 - [x] 02-01: Go project scaffold — Chi router, pgx pool, config, /health endpoint, graceful shutdown, otp_sessions migration
-- [ ] 02-02: Registration flow — validate fields, send MSG91 OTP, store session_id, verify OTP, create teacher row, return tokens
+- [x] 02-02: Registration flow — validate fields, send MSG91 OTP, store session_id, verify OTP, create teacher row, return tokens
 - [ ] 02-03: Login, refresh, logout endpoints; JWT middleware; refresh token table (device_hint, last_used_at, blacklisted flag)
 - [ ] 02-04: Auth edge cases — duplicate mobile check, 3-attempt OTP lockout, 60s resend timer enforcement, bcrypt cost-12, no plaintext mobile logging
 
@@ -176,7 +176,7 @@ Note: Phase 3 and Phase 4 can be developed in parallel — Flutter Auth Shell do
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Database Foundation | 3/3 | Complete | 2026-05-19 |
-| 2. Go Auth API | 1/4 | In Progress|  |
+| 2. Go Auth API | 2/4 | In Progress|  |
 | 3. Go CRUD API | 0/4 | Not started | - |
 | 4. Flutter Auth Shell | 0/4 | Not started | - |
 | 5. Flutter Class + Student Management | 0/3 | Not started | - |

@@ -9,11 +9,11 @@
 
 ### Authentication (AUTH)
 
-- [ ] **AUTH-01**: Teacher can register with full name, mobile number, school name, and password — form validates all fields inline
-- [ ] **AUTH-02**: Registration triggers OTP sent to mobile via MSG91; account is created only after successful OTP verification (no partial accounts)
-- [ ] **AUTH-03**: OTP screen shows 6-digit input, 60-second resend timer, max 3 resends per session; OTP expires in 10 minutes
+- [x] **AUTH-01**: Teacher can register with full name, mobile number, school name, and password — form validates all fields inline
+- [x] **AUTH-02**: Registration triggers OTP sent to mobile via MSG91; account is created only after successful OTP verification (no partial accounts)
+- [x] **AUTH-03**: OTP screen shows 6-digit input, 60-second resend timer, max 3 resends per session; OTP expires in 10 minutes
 - [ ] **AUTH-04**: 3 incorrect OTP attempts lock the session with clear error message
-- [ ] **AUTH-05**: After successful OTP verification, teacher is auto-logged in (tokens returned) and taken to Home Screen — no manual login step
+- [x] **AUTH-05**: After successful OTP verification, teacher is auto-logged in (tokens returned) and taken to Home Screen — no manual login step
 - [ ] **AUTH-06**: Teacher can log in with mobile number and password; valid credentials return JWT + refresh token and navigate to Home Screen
 - [ ] **AUTH-07**: Invalid login shows generic error ("Invalid mobile number or password") without revealing which field is wrong
 - [ ] **AUTH-08**: On every app launch, app silently uses stored refresh token to obtain fresh access token — teacher sees Home Screen without Login screen
@@ -21,7 +21,7 @@
 - [ ] **AUTH-10**: Teacher is redirected to Login only when server explicitly rejects the refresh token (tampered or blacklisted)
 - [ ] **AUTH-11**: Teacher can log out from Settings; logout clears tokens from Flutter Secure Storage and invalidates refresh token server-side
 - [ ] **AUTH-12**: Multiple device logins supported — logging out on one device does not affect other device sessions
-- [ ] **AUTH-13**: Duplicate mobile number registration blocked with inline error: "This mobile number is already registered. Please login."
+- [x] **AUTH-13**: Duplicate mobile number registration blocked with inline error: "This mobile number is already registered. Please login."
 
 ### Classes (CLS)
 
@@ -135,16 +135,16 @@
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | INFRA-03 | Phase 1 — Database Foundation | Complete (01-02) |
-| AUTH-01 | Phase 2 — Go Auth API | Pending |
-| AUTH-02 | Phase 2 — Go Auth API | Pending |
-| AUTH-03 | Phase 2 — Go Auth API | Pending |
+| AUTH-01 | Phase 2 — Go Auth API | Complete |
+| AUTH-02 | Phase 2 — Go Auth API | Complete |
+| AUTH-03 | Phase 2 — Go Auth API | Complete |
 | AUTH-04 | Phase 2 — Go Auth API | Pending |
-| AUTH-05 | Phase 2 — Go Auth API | Pending |
+| AUTH-05 | Phase 2 — Go Auth API | Complete |
 | AUTH-06 | Phase 2 — Go Auth API | Pending |
 | AUTH-07 | Phase 2 — Go Auth API | Pending |
 | AUTH-11 | Phase 2 — Go Auth API | Pending |
 | AUTH-12 | Phase 2 — Go Auth API | Pending |
-| AUTH-13 | Phase 2 — Go Auth API | Pending |
+| AUTH-13 | Phase 2 — Go Auth API | Complete |
 | INFRA-01 | Phase 2 — Go Auth API | Complete |
 | INFRA-02 | Phase 2 — Go Auth API | Complete |
 | CLS-01 | Phase 3 — Go CRUD API | Pending |
