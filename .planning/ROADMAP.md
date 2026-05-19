@@ -13,7 +13,7 @@ Eight phases take this project from a blank Supabase schema to a production-read
 Phases execute in numeric order. Phase 3 and Phase 4 can be developed in parallel.
 
 - [x] **Phase 1: Database Foundation** (3/3 plans complete) - Supabase schema, RLS policies, and migrations — everything else builds on this
-- [ ] **Phase 2: Go Auth API** - JWT authentication, MSG91 OTP, refresh token table, and all auth endpoints
+- [x] **Phase 2: Go Auth API** - JWT authentication, MSG91 OTP, refresh token table, and all auth endpoints
 - [ ] **Phase 3: Go CRUD API** - Classes, students, attendance endpoints, IST midnight lock, and report generation backend
 - [ ] **Phase 4: Flutter Auth Shell** - Routing, auth guard, JWT refresh interceptor, login and registration screens
 - [ ] **Phase 5: Flutter Class + Student Management** - Class list, CRUD screens, student list, dummy seed button
@@ -56,7 +56,7 @@ Plans:
 - [x] 02-01: Go project scaffold — Chi router, pgx pool, config, /health endpoint, graceful shutdown, otp_sessions migration
 - [x] 02-02: Registration flow — validate fields, send MSG91 OTP, store session_id, verify OTP, create teacher row, return tokens
 - [x] 02-03: Login, refresh, logout endpoints; JWT middleware; refresh token table (device_hint, last_used_at, blacklisted flag)
-- [ ] 02-04: Auth edge cases — duplicate mobile check, 3-attempt OTP lockout, 60s resend timer enforcement, bcrypt cost-12, no plaintext mobile logging
+- [x] 02-04: Auth edge cases — duplicate mobile check, 3-attempt OTP lockout, 60s resend timer enforcement, bcrypt cost-12, no plaintext mobile logging
 
 ### Phase 3: Go CRUD API
 **Goal**: All class, student, and attendance business logic is exposed via authenticated API endpoints — Flutter can perform any data operation, and the midnight IST lock is enforced at the API layer
@@ -176,7 +176,7 @@ Note: Phase 3 and Phase 4 can be developed in parallel — Flutter Auth Shell do
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Database Foundation | 3/3 | Complete | 2026-05-19 |
-| 2. Go Auth API | 3/4 | In Progress|  |
+| 2. Go Auth API | 4/4 | Complete | 2026-05-19 |
 | 3. Go CRUD API | 0/4 | Not started | - |
 | 4. Flutter Auth Shell | 0/4 | Not started | - |
 | 5. Flutter Class + Student Management | 0/3 | Not started | - |

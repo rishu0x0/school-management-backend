@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-05-19)
 
 **Core value:** A teacher can open the app, swipe through their class in under 2 minutes, and have attendance recorded — with monthly reports generated automatically on the 1st of each month.
-**Current focus:** Phase 2 — Go Auth API
+**Current focus:** Phase 3 — Go CRUD API (Phase 2 complete)
 
 ## Current Position
 
-Phase: 2 of 8 (Go Auth API)
-Plan: 3 of 4 in current phase (plan 02-03 complete)
-Status: Phase 2 in progress — plans 02-01, 02-02, and 02-03 done, plan 02-04 remaining
-Last activity: 2026-05-19 — Completed plan 02-03 (Login/Refresh/Logout service+handlers, full JWT middleware replacing stub)
+Phase: 2 of 8 (Go Auth API) — COMPLETE
+Plan: 4 of 4 in phase 02 (plan 02-04 complete — all Phase 2 plans done)
+Status: Phase 2 complete — beginning Phase 3 (Go CRUD API)
+Last activity: 2026-05-19 — Completed plan 02-04 (auth hardening: 60s OTP cooldown, bcrypt/lockout confirmation, logging audit, .env.example restoration)
 
-Progress: [████░░░░░░] 31%
+Progress: [█████░░░░░] 37%
 
 ## Performance Metrics
 
@@ -28,10 +28,10 @@ Progress: [████░░░░░░] 31%
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-database-foundation | 3 | 6 min | 2 min |
-| 02-go-auth-api | 3 | 9 min | 3 min |
+| 02-go-auth-api | 4 | 14 min | 3.5 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-02 (2 min), 01-03 (2 min), 02-01 (3 min), 02-02 (4 min), 02-03 (2 min)
+- Last 5 plans: 01-03 (2 min), 02-01 (3 min), 02-02 (4 min), 02-03 (2 min), 02-04 (5 min)
 - Trend: —
 
 *Updated after each plan completion*
@@ -69,6 +69,9 @@ Recent decisions affecting current work:
 - 02-03: Login validates mobile format before DB query — avoids unnecessary query on obviously invalid input
 - 02-03: JWTMiddleware returns 401 (not 403) for all token failures — prevents route existence leakage
 - 02-03: contextKey typed string (not plain string) — compile-time safety for context key lookups
+- 02-04: ErrRetryTooSoon checks last_retry_at only (not created_at) — initial send never sets last_retry_at so first retry is always allowed
+- 02-04: .env.example uses DATABASE_URL (not SUPABASE_DB_URL) — aligned with config.go requireEnv("DATABASE_URL")
+- 02-04: Logging audit: all existing log statements are safe (config/startup/db-connect) — no mobile data reaches log calls (INFRA-02 compliant)
 
 ### Pending Todos
 
@@ -82,5 +85,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-05-19
-Stopped at: Completed 02-03-PLAN.md — Login/Refresh/Logout service methods and handlers, full JWT middleware; Phase 2 plan 3 of 4 complete
+Stopped at: Completed 02-04-PLAN.md — auth hardening (60s OTP cooldown, bcrypt/lockout confirmation, logging audit, .env.example); Phase 2 ALL 4 PLANS COMPLETE
 Resume file: None
