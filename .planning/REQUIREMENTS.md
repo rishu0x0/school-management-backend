@@ -86,7 +86,7 @@
 
 - [ ] **INFRA-01**: All API endpoints except auth require valid JWT Bearer token; expired access tokens are silently refreshed using the stored refresh token
 - [ ] **INFRA-02**: Passwords stored as bcrypt hashes (cost factor 12); mobile numbers not logged in plaintext
-- [ ] **INFRA-03**: Supabase RLS enforced: teachers can only access data owned by their account (classes → students → attendance)
+- [x] **INFRA-03**: Supabase RLS enforced: teachers can only access data owned by their account (classes → students → attendance)
 - [ ] **INFRA-04**: App shows "No internet connection" with retry button when offline; no data loss during network interruption
 - [ ] **INFRA-05**: App cold start under 3 seconds; API read responses under 500ms; write operations under 1 second
 - [ ] **INFRA-06**: App supports Android 6.0+ and iOS 13+; generated files compatible with standard viewers and MS Excel / Google Sheets
@@ -134,7 +134,7 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| INFRA-03 | Phase 1 — Database Foundation | Pending |
+| INFRA-03 | Phase 1 — Database Foundation | Complete (01-02) |
 | AUTH-01 | Phase 2 — Go Auth API | Pending |
 | AUTH-02 | Phase 2 — Go Auth API | Pending |
 | AUTH-03 | Phase 2 — Go Auth API | Pending |
@@ -225,4 +225,4 @@
 ---
 
 *Requirements defined: 2026-05-19*  
-*Last updated: 2026-05-19 — traceability updated with per-requirement phase assignments after roadmap creation*
+*Last updated: 2026-05-19 — INFRA-03 marked complete after 01-02 RLS policies migration*

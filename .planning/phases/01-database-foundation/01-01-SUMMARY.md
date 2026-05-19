@@ -124,6 +124,16 @@ None - plan executed exactly as written. SQL content matches plan specification 
 - Plan 01-02 (RLS policies) can proceed once Docker is installed and `supabase db reset` runs cleanly
 - Seed teacher UUIDs (`000...001` and `000...002`) are the exact IDs expected by plan 01-02 RLS isolation tests
 
+## Self-Check: PASSED
+
+- FOUND: supabase/config.toml
+- FOUND: supabase/migrations/20260519000001_create_schema.sql
+- FOUND: supabase/seed.sql
+- FOUND: .planning/phases/01-database-foundation/01-01-SUMMARY.md
+- FOUND: commit 690807c (Task 1 — init + DDL migration)
+- FOUND: commit 4323e9a (Task 2 — seed.sql)
+- FOUND: commit 9a7f892 (metadata — SUMMARY, STATE, ROADMAP)
+
 ---
 *Phase: 01-database-foundation*
 *Completed: 2026-05-19*

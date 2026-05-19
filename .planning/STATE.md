@@ -10,27 +10,27 @@ See: .planning/PROJECT.md (updated 2026-05-19)
 ## Current Position
 
 Phase: 1 of 8 (Database Foundation)
-Plan: 1 of 3 in current phase
+Plan: 2 of 3 in current phase
 Status: In progress
-Last activity: 2026-05-19 — Completed plan 01-01 (schema DDL migration + seed data)
+Last activity: 2026-05-19 — Completed plan 01-02 (RLS policies migration + isolation tests)
 
-Progress: [█░░░░░░░░░] 4%
+Progress: [█░░░░░░░░░] 7%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 1
+- Total plans completed: 2
 - Average duration: 2 min
-- Total execution time: 0.03 hours
+- Total execution time: 0.07 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01-database-foundation | 1 | 2 min | 2 min |
+| 01-database-foundation | 2 | 4 min | 2 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (2 min)
+- Last 5 plans: 01-01 (2 min), 01-02 (2 min)
 - Trend: —
 
 *Updated after each plan completion*
@@ -49,6 +49,9 @@ Recent decisions affecting current work:
 - 01-01: UNIQUE INDEX (not plain index) on refresh_tokens(token_hash) to prevent token hash collisions at DB level
 - 01-01: attendance_sessions.class_id has no ON DELETE CASCADE — orphan sessions intentionally preserved as audit trail
 - 01-01: attendance_records.student_id has no ON DELETE CASCADE — deleted students remain in historical attendance records
+- 01-02: (select auth.uid()) wrapper required on ALL RLS policy USING/WITH CHECK clauses — initPlan optimization; NEVER use bare auth.uid()
+- 01-02: FOR ALL policies (not per-operation) — single policy per table, Go backend bypasses RLS via service role key
+- 01-02: Subquery pattern (not JOIN) for two-level chains — students via classes, attendance_records via attendance_sessions
 
 ### Pending Todos
 
@@ -57,10 +60,10 @@ None yet.
 ### Blockers/Concerns
 
 - MSG91 DLT registration must be initiated immediately — it blocks all OTP production testing in Phase 2
-- Docker Desktop not installed — required for supabase db reset to run locally; blocks live schema verification and plan 01-02 execution
+- Docker Desktop not installed — required for supabase db reset to run locally; blocks live schema verification and plan 01-02/01-03 live execution
 
 ## Session Continuity
 
 Last session: 2026-05-19
-Stopped at: Completed 01-01-PLAN.md — schema DDL migration and seed.sql created; Docker required for live db reset
+Stopped at: Completed 01-02-PLAN.md — RLS migration file + isolation test scripts created; Docker required for live verification
 Resume file: None
