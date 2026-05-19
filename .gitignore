@@ -1,0 +1,23 @@
+# Environment variables — never commit real secrets
+.env
+.env.local
+.env.*.local
+
+# Go build output
+/bin/
+/dist/
+
+# Go test cache
+*.test
+*.out
+
+# macOS
+.DS_Store
+
+# Editor
+.vscode/
+.idea/
+
+# Supabase local state (not needed in git)
+supabase/.branches/
+supabase/.temp/
