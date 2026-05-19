@@ -177,7 +177,7 @@ Note: Phase 3 and Phase 4 can be developed in parallel — Flutter Auth Shell do
 |-------|----------------|--------|-----------|
 | 1. Database Foundation | 3/3 | Complete | 2026-05-19 |
 | 2. Go Auth API | 4/4 | Complete | 2026-05-19 |
-| 3. Go CRUD API | 2/4 | In Progress|  |
+| 3. Go CRUD API | 3/4 | In Progress|  |
 | 4. Flutter Auth Shell | 0/4 | Not started | - |
 | 5. Flutter Class + Student Management | 0/3 | Not started | - |
 | 6. Flutter Attendance Swipe | 0/5 | Not started | - |

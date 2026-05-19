@@ -42,7 +42,7 @@
 
 ### Attendance — Swipe (ATT)
 
-- [ ] **ATT-01**: Teacher can select a class to take attendance; if today's attendance is already submitted, app shows read-only summary with an "Edit" option
+- [x] **ATT-01**: Teacher can select a class to take attendance; if today's attendance is already submitted, app shows read-only summary with an "Edit" option
 - [ ] **ATT-02**: Attendance swipe screen shows one student card at a time (Tinder-style stack); card shows student photo/avatar, full name, roll number, and class name
 - [ ] **ATT-03**: Left swipe marks student as Present with green card overlay and ✓ icon at 60fps with no jank
 - [ ] **ATT-04**: Right swipe marks student as Absent with red card overlay and ✗ icon at 60fps
@@ -59,10 +59,10 @@
 - [ ] **SUB-02**: Summary screen shows total counts at top: Present: X | Absent: Y | Leave: Z
 - [ ] **SUB-03**: Teacher can tap any student row on summary to change their status via a bottom-sheet 3-option picker
 - [ ] **SUB-04**: "Submit Attendance" button shows confirmation dialog: "Submit attendance for [Class] on [Date]? This cannot be edited after midnight."
-- [ ] **SUB-05**: On confirmed submit, all records are saved to backend in a single transaction; teacher is navigated to Statistics screen on success
-- [ ] **SUB-06**: A class can have only one attendance submission per calendar day; subsequent same-day views show the existing record with edit option
-- [ ] **SUB-07**: Teacher can edit submitted attendance until 11:59 PM IST on the submission date; records are locked after midnight IST
-- [ ] **SUB-08**: Attendance data is held in local state during swiping session; no partial API saves mid-session
+- [x] **SUB-05**: On confirmed submit, all records are saved to backend in a single transaction; teacher is navigated to Statistics screen on success
+- [x] **SUB-06**: A class can have only one attendance submission per calendar day; subsequent same-day views show the existing record with edit option
+- [x] **SUB-07**: Teacher can edit submitted attendance until 11:59 PM IST on the submission date; records are locked after midnight IST
+- [x] **SUB-08**: Attendance data is held in local state during swiping session; no partial API saves mid-session
 
 ### Statistics (STAT)
 
@@ -158,11 +158,11 @@
 | STU-04 | Phase 3 — Go CRUD API | Complete |
 | STU-05 | Phase 3 — Go CRUD API | Complete |
 | STU-06 | Phase 3 — Go CRUD API | Complete |
-| ATT-01 | Phase 3 — Go CRUD API | Pending |
-| SUB-05 | Phase 3 — Go CRUD API | Pending |
-| SUB-06 | Phase 3 — Go CRUD API | Pending |
-| SUB-07 | Phase 3 — Go CRUD API | Pending |
-| SUB-08 | Phase 3 — Go CRUD API | Pending |
+| ATT-01 | Phase 3 — Go CRUD API | Complete |
+| SUB-05 | Phase 3 — Go CRUD API | Complete |
+| SUB-06 | Phase 3 — Go CRUD API | Complete |
+| SUB-07 | Phase 3 — Go CRUD API | Complete |
+| SUB-08 | Phase 3 — Go CRUD API | Complete |
 | AUTH-08 | Phase 4 — Flutter Auth Shell | Complete |
 | AUTH-09 | Phase 4 — Flutter Auth Shell | Pending |
 | AUTH-10 | Phase 4 — Flutter Auth Shell | Complete |
@@ -178,7 +178,7 @@
 | STU-04 | Phase 5 — Flutter Class + Student Management | Complete |
 | STU-05 | Phase 5 — Flutter Class + Student Management | Complete |
 | STU-06 | Phase 5 — Flutter Class + Student Management | Complete |
-| ATT-01 | Phase 6 — Flutter Attendance Swipe | Pending |
+| ATT-01 | Phase 6 — Flutter Attendance Swipe | Complete |
 | ATT-02 | Phase 6 — Flutter Attendance Swipe | Pending |
 | ATT-03 | Phase 6 — Flutter Attendance Swipe | Pending |
 | ATT-04 | Phase 6 — Flutter Attendance Swipe | Pending |
@@ -192,10 +192,10 @@
 | SUB-02 | Phase 6 — Flutter Attendance Swipe | Pending |
 | SUB-03 | Phase 6 — Flutter Attendance Swipe | Pending |
 | SUB-04 | Phase 6 — Flutter Attendance Swipe | Pending |
-| SUB-05 | Phase 6 — Flutter Attendance Swipe | Pending |
-| SUB-06 | Phase 6 — Flutter Attendance Swipe | Pending |
-| SUB-07 | Phase 6 — Flutter Attendance Swipe | Pending |
-| SUB-08 | Phase 6 — Flutter Attendance Swipe | Pending |
+| SUB-05 | Phase 6 — Flutter Attendance Swipe | Complete |
+| SUB-06 | Phase 6 — Flutter Attendance Swipe | Complete |
+| SUB-07 | Phase 6 — Flutter Attendance Swipe | Complete |
+| SUB-08 | Phase 6 — Flutter Attendance Swipe | Complete |
 | STAT-01 | Phase 6 — Flutter Attendance Swipe | Pending |
 | STAT-02 | Phase 6 — Flutter Attendance Swipe | Pending |
 | STAT-03 | Phase 6 — Flutter Attendance Swipe | Pending |
