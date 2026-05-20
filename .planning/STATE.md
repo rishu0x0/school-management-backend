@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-05-19)
 
 ## Current Position
 
-Phase: 4 of 8 (Flutter Auth Shell) — In Progress
-Plan: 2 of 4 in phase 04 (plan 04-02 complete — Auth state machine, go_router auth guard, silent refresh, MaterialApp.router)
-Status: Phase 4 in progress — plans 04-01 and 04-02 done; plans 04-03 and 04-04 remaining
-Last activity: 2026-05-20 — Completed plan 04-02 (sealed AuthState 5 states, @riverpod AuthNotifier silentRefresh/login/logout, SecureStorageService, RouterNotifier auth guard, screen stubs, flutter analyze clean)
+Phase: 4 of 8 (Flutter Auth Shell) — Complete (2026-05-20)
+Plan: 4 of 4 in phase 04 (plan 04-04 complete — Dio QueuedInterceptorsWrapper JWT refresh, NetworkNotifier, offline banner overlay)
+Status: Phase 4 complete — all 4 plans done; next phase is Phase 5
+Last activity: 2026-05-20 — Completed plan 04-04 (Dio JWT refresh interceptor, connectivity_plus NetworkNotifier, no-internet Stack overlay in app.dart, flutter analyze zero errors)
 
-Progress: [█████████░] 65%
+Progress: [██████████] 70%
 
 ## Performance Metrics
 
@@ -93,6 +93,10 @@ Recent decisions affecting current work:
 - [Phase 04-flutter-auth-shell 04-02]: Use bare Ref (not deprecated RouterRef/SecureStorageRef) in @riverpod provider functions — riverpod_generator 2.x emits deprecated typedefs; using Ref directly eliminates warnings
 - [Phase 04-flutter-auth-shell 04-02]: silentRefresh distinguishes SocketException/DioExceptionType.connectionError from HTTP 401 — network error → AuthNetworkError, 401 → AuthUnauthenticated (teachers never logged out by network glitch)
 - [Phase 04-flutter-auth-shell 04-02]: RouterNotifier (ChangeNotifier) bridges Riverpod authNotifierProvider to GoRouter refresh cycle via ref.listen → notifyListeners()
+- [Phase 04-flutter-auth-shell 04-04]: QueuedInterceptorsWrapper chosen over plain Interceptor — queues parallel 401 requests so only one /auth/refresh fires; others retry after refresh completes
+- [Phase 04-flutter-auth-shell 04-04]: Fresh Dio used for /auth/refresh POST and for retry — avoids re-entering _JwtInterceptor chain, prevents infinite refresh loops
+- [Phase 04-flutter-auth-shell 04-04]: NetworkNotifier initialises to true (assume connected); connectivity_plus stream corrects state; offline banner is a Stack overlay not a route redirect
+- [Phase 04-flutter-auth-shell 04-04]: connectivity_plus v6+ emits List<ConnectivityResult> — listener uses .any((r) => r != ConnectivityResult.none) to derive bool
 
 ### Pending Todos
 
@@ -106,5 +110,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-05-20
-Stopped at: Completed 04-02-PLAN.md — Auth state machine (sealed AuthState 5 states), @riverpod AuthNotifier (silentRefresh/login/logout), SecureStorageService, RouterNotifier auth guard, screen stubs, flutter analyze clean
+Stopped at: Completed 04-04-PLAN.md — Dio QueuedInterceptorsWrapper JWT refresh interceptor, connectivity_plus NetworkNotifier, no-internet Stack overlay banner in app.dart, flutter analyze zero errors. Phase 4 Flutter Auth Shell complete.
 Resume file: None
