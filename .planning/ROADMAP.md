@@ -19,7 +19,7 @@ Phases execute in numeric order. Phase 3 and Phase 4 can be developed in paralle
 - [x] **Phase 5: Flutter Class + Student Management** - Class list, CRUD screens, student list, dummy seed button
 - [x] **Phase 6: Flutter Attendance Swipe** - Swipe cards, summary screen, submission flow, and statistics screen
 - [x] **Phase 7: Reports (Backend + Flutter)** - PDF/Excel generation, cron auto-export, Supabase Storage, Flutter download UI
-- [ ] **Phase 8: Integration, QA + Hardening** - IST timezone integration tests, RLS multi-teacher isolation tests, platform compatibility, App Store build
+- [x] **Phase 8: Integration, QA + Hardening** - IST timezone integration tests, RLS multi-teacher isolation tests, platform compatibility, App Store build
 
 ## Phase Details
 
@@ -162,10 +162,10 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [ ] 08-01: IST timezone integration tests (midnight boundary ±1 minute); RLS multi-teacher data isolation tests for all tables
-- [ ] 08-02: Performance profiling — Flutter DevTools frame analysis (60fps swipe), API response time benchmarks under load
-- [ ] 08-03: Cross-platform compatibility — PDF in Preview/Acrobat/Android viewer; Excel in MS Excel + Google Sheets; Android 6.0 minimum build test; iOS 13 simulator test
-- [ ] 08-04: Production build pipeline — App Store Connect submission (TestFlight), Google Play internal test track; crash reporting setup (Sentry or Firebase Crashlytics)
+- [x] 08-01: IST timezone integration tests (midnight boundary ±1 minute); RLS multi-teacher data isolation tests for all tables
+- [x] 08-02: Performance profiling — Flutter DevTools frame analysis (60fps swipe), API response time benchmarks under load
+- [x] 08-03: Cross-platform compatibility — PDF in Preview/Acrobat/Android viewer; Excel in MS Excel + Google Sheets; Android 6.0 minimum build test; iOS 13 simulator test
+- [x] 08-04: Production build pipeline — App Store Connect submission (TestFlight), Google Play internal test track; crash reporting setup (Sentry or Firebase Crashlytics)
 
 ## Progress
 
@@ -182,4 +182,4 @@ Note: Phase 3 and Phase 4 can be developed in parallel — Flutter Auth Shell do
 | 5. Flutter Class + Student Management | 3/3 | Complete | 2026-05-20 |
 | 6. Flutter Attendance Swipe | 5/5 | Complete | 2026-05-20 |
 | 7. Reports (Backend + Flutter) | 5/5 | Complete | 2026-05-20 |
-| 8. Integration, QA + Hardening | 0/4 | Not started | - |
+| 8. Integration, QA + Hardening | 4/4 | Complete | 2026-05-20 |
