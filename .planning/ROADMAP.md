@@ -16,7 +16,7 @@ Phases execute in numeric order. Phase 3 and Phase 4 can be developed in paralle
 - [x] **Phase 2: Go Auth API** - JWT authentication, MSG91 OTP, refresh token table, and all auth endpoints
 - [x] **Phase 3: Go CRUD API** (4/4 plans complete) - Classes, students, attendance endpoints, IST midnight lock, and stats endpoints
 - [x] **Phase 4: Flutter Auth Shell** - Routing, auth guard, JWT refresh interceptor, login and registration screens
-- [ ] **Phase 5: Flutter Class + Student Management** - Class list, CRUD screens, student list, dummy seed button
+- [x] **Phase 5: Flutter Class + Student Management** - Class list, CRUD screens, student list, dummy seed button
 - [ ] **Phase 6: Flutter Attendance Swipe** - Swipe cards, summary screen, submission flow, and statistics screen
 - [ ] **Phase 7: Reports (Backend + Flutter)** - PDF/Excel generation, cron auto-export, Supabase Storage, Flutter download UI
 - [ ] **Phase 8: Integration, QA + Hardening** - IST timezone integration tests, RLS multi-teacher isolation tests, platform compatibility, App Store build
@@ -107,9 +107,9 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [ ] 05-01: Class list screen (home), create/edit class bottom sheet, delete confirmation dialog; empty state design
-- [ ] 05-02: Student list screen (ordered by roll), add/edit student form, soft-remove with undo toast, "(Removed)" display for past records
-- [ ] 05-03: "Generate Test Students" flow; roll number auto-assignment logic; photo upload via image_picker to Supabase Storage
+- [x] 05-01: Class list screen (home), create/edit class bottom sheet, delete confirmation dialog; empty state design
+- [x] 05-02: Student list screen (ordered by roll), add/edit student form, soft-remove with undo toast, "(Removed)" display for past records
+- [x] 05-03: "Generate Test Students" flow; roll number auto-assignment logic; photo upload via image_picker to Supabase Storage
 
 ### Phase 6: Flutter Attendance Swipe
 **Goal**: Teachers can take attendance for a full class in under 2 minutes using swipe gestures or tap buttons, review the summary, edit any status, and submit — the core product value is delivered and working
@@ -179,7 +179,7 @@ Note: Phase 3 and Phase 4 can be developed in parallel — Flutter Auth Shell do
 | 2. Go Auth API | 4/4 | Complete | 2026-05-19 |
 | 3. Go CRUD API | 4/4 | Complete | 2026-05-19 |
 | 4. Flutter Auth Shell | 4/4 | Complete | 2026-05-20 |
-| 5. Flutter Class + Student Management | 0/3 | Not started | - |
+| 5. Flutter Class + Student Management | 3/3 | Complete | 2026-05-20 |
 | 6. Flutter Attendance Swipe | 0/5 | Not started | - |
 | 7. Reports (Backend + Flutter) | 0/5 | Not started | - |
 | 8. Integration, QA + Hardening | 0/4 | Not started | - |
