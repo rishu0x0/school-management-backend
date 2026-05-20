@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-05-19)
 
 **Core value:** A teacher can open the app, swipe through their class in under 2 minutes, and have attendance recorded — with monthly reports generated automatically on the 1st of each month.
-**Current focus:** Phase 5 — Flutter Class & Student Management (Phase 4 complete)
+**Current focus:** Phase 6 — Flutter Attendance Swipe (Phase 5 complete 2026-05-20)
 
 ## Current Position
 
-Phase: 5 of 8 (Flutter Class & Student Management) — In progress (2026-05-20)
-Plan: 2 of 3 in phase 05 (plan 05-02 complete — StudentRepository, StudentsNotifier, StudentListScreen, StudentFormSheet)
-Status: Phase 5 plan 2 complete — 1 plan remains (05-03 swipe attendance)
-Last activity: 2026-05-20 — Completed plan 05-02 (StudentRepository Dio CRUD, StudentsNotifier family pattern, StudentListScreen Slidable soft-remove, StudentFormSheet, flutter analyze zero errors)
+Phase: 6 of 8 (Flutter Attendance Swipe) — Not started
+Plan: 0 of N in phase 06
+Status: Phase 5 complete (all 3 plans done) — next phase is Phase 6 Flutter Attendance Swipe
+Last activity: 2026-05-20 — Completed plan 05-03 (seed flow, photo upload via Supabase Storage, flutter analyze zero errors)
 
-Progress: [██████████] 70%
+Progress: [████████████] 75%
 
 ## Performance Metrics
 
@@ -102,6 +102,10 @@ Recent decisions affecting current work:
 - [Phase 05-flutter-class-student-management]: showDeleteClassFlow as top-level function (not widget class) for clean delete-warning two-step flow
 - [Phase 05-flutter-class-student-management 05-02]: Renamed StudentsNotifier.update to updateStudent — same AsyncNotifierBase.update collision pattern
 - [Phase 05-flutter-class-student-management 05-02]: Undo SnackBar dismisses only — soft-remove is server-side committed; true undo requires re-activate endpoint (out of scope)
+- [Phase 05-flutter-class-student-management 05-03]: Supabase initialized with empty String.fromEnvironment defaults — storage calls fail gracefully when SUPABASE_URL not provided at runtime
+- [Phase 05-flutter-class-student-management 05-03]: Two-step CREATE then upload for new student photos — student ID needed for storage path; repository.create() first, then _uploadPhoto(), then repository.update() with URL
+- [Phase 05-flutter-class-student-management 05-03]: _uploadPhoto() catches all exceptions and returns existingPhotoUrl as fallback — no crash when student-photos bucket not configured
+- [Phase 05-flutter-class-student-management 05-03]: _handleSeed() as instance method on ConsumerWidget — seed is one-shot async, no widget state needed
 
 ### Pending Todos
 
@@ -115,5 +119,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-05-20
-Stopped at: Completed 05-02-PLAN.md — StudentRepository (list/create/update/softRemove via Dio), StudentsNotifier (family pattern with classID, updateStudent to avoid collision), StudentListScreen (Slidable edit+remove, grey-italic removed entries, empty state, pull-to-refresh, undo SnackBar), StudentFormSheet (name required, roll optional), flutter analyze zero errors.
+Stopped at: Completed 05-03-PLAN.md — Phase 5 complete. seed() in StudentRepository + StudentsNotifier, seed button wired in StudentListScreen, photo picker (image_picker + Supabase Storage) in StudentFormSheet with graceful fallback, flutter analyze zero errors. Next: Phase 6 Flutter Attendance Swipe.
 Resume file: None
