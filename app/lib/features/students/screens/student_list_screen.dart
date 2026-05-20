@@ -32,6 +32,37 @@ class StudentListScreen extends ConsumerWidget {
     );
   }
 
+  Future<void> _handleSeed(BuildContext context, WidgetRef ref) async {
+    final messenger = ScaffoldMessenger.of(context);
+    messenger.showSnackBar(
+      const SnackBar(
+        content: Text('Generating 30 test students...'),
+        duration: Duration(seconds: 30),
+      ),
+    );
+    try {
+      final created = await ref
+          .read(studentsNotifierProvider(classID).notifier)
+          .seed();
+      messenger.hideCurrentSnackBar();
+      if (context.mounted) {
+        messenger.showSnackBar(
+          SnackBar(content: Text('Generated $created students')),
+        );
+      }
+    } catch (_) {
+      messenger.hideCurrentSnackBar();
+      if (context.mounted) {
+        messenger.showSnackBar(
+          const SnackBar(
+            content: Text('Failed to generate students'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
   void _softRemove(BuildContext context, WidgetRef ref, StudentModel student) {
     ref.read(studentsNotifierProvider(classID).notifier).softRemove(student.id);
     ScaffoldMessenger.of(context).showSnackBar(
@@ -62,11 +93,7 @@ class StudentListScreen extends ConsumerWidget {
           PopupMenuButton<String>(
             onSelected: (action) {
               if (action == 'seed') {
-                // Seed action implemented in plan 05-03
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                      content: Text('Generate students — coming in 05-03')),
-                );
+                _handleSeed(context, ref);
               }
             },
             itemBuilder: (_) => const [
