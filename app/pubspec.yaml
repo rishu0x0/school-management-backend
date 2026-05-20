@@ -32,6 +32,15 @@ dependencies:
   # UI helpers
   flutter_slidable: ^3.1.1
 
+  # Supabase for storage
+  supabase_flutter: ^2.8.4
+
+  # Image picker for student photos
+  image_picker: ^1.1.2
+
+  # Cached network image for displaying photos
+  cached_network_image: ^3.4.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
