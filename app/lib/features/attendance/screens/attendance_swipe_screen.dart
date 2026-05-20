@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:school_attendance/features/attendance/notifier/attendance_notifier.dart';
 import 'package:school_attendance/features/attendance/repository/attendance_repository.dart';
+import 'package:school_attendance/features/attendance/widgets/status_button_row.dart';
 import 'package:school_attendance/features/attendance/widgets/student_swipe_card.dart';
 
 class AttendanceSwipeScreen extends ConsumerStatefulWidget {
@@ -26,19 +27,46 @@ class _AttendanceSwipeScreenState
   final _controller = CardSwiperController();
   CardSwiperDirection? _currentDirection;
 
+  String _todayIST() {
+    final now = DateTime.now();
+    return '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+  }
+
   @override
   void initState() {
     super.initState();
     // Check after first frame if today's session already submitted → go to stats
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      final session =
-          ref.read(attendanceNotifierProvider(widget.classID)).valueOrNull;
-      if (session?.submittedSession != null) {
+      _checkExistingSession();
+    });
+  }
+
+  Future<void> _checkExistingSession() async {
+    if (!mounted) return;
+    // First check in-memory submitted flag
+    final session =
+        ref.read(attendanceNotifierProvider(widget.classID)).valueOrNull;
+    if (session?.submittedSession != null) {
+      if (mounted) {
         context.pushReplacement('/classes/${widget.classID}/stats',
             extra: {'className': widget.className});
       }
-    });
+      return;
+    }
+    // Then check server for existing submission today
+    try {
+      final existing = await ref
+          .read(attendanceRepositoryProvider)
+          .getByDate(classID: widget.classID, date: _todayIST());
+      if (existing != null && mounted) {
+        context.pushReplacement(
+          '/classes/${widget.classID}/stats',
+          extra: {'className': widget.className},
+        );
+      }
+    } catch (_) {
+      // Network error — continue showing swipe UI; user can retry
+    }
   }
 
   @override
@@ -202,8 +230,18 @@ class _AttendanceSwipeScreenState
                   ),
                 ),
               ),
-              // Action buttons — wired in plan 06-02
-              const SizedBox(height: 80),
+              StatusButtonRow(
+                canUndo: session.currentIndex > 0,
+                onPresent: () => _controller.swipe(CardSwiperDirection.left),
+                onAbsent: () => _controller.swipe(CardSwiperDirection.right),
+                onLeave: () => _controller.swipe(CardSwiperDirection.top),
+                onUndo: () {
+                  _controller.undo();
+                  ref
+                      .read(attendanceNotifierProvider(widget.classID).notifier)
+                      .undo();
+                },
+              ),
             ],
           );
         },
