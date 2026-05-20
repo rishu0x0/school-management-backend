@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-05-19)
 
 ## Current Position
 
-Phase: 3 of 8 (Go CRUD API) — Complete
-Plan: 4 of 4 in phase 03 (plan 03-04 complete — stats endpoints)
-Status: Phase 3 complete — all 4 plans done (classes, students, attendance, stats); ready for Phase 4
-Last activity: 2026-05-19 — Completed plan 03-04 (stats endpoints: TodaySummary, MonthlySummary, 2 JWT-protected routes; Phase 3 done)
+Phase: 4 of 8 (Flutter Auth Shell) — In Progress
+Plan: 1 of 4 in phase 04 (plan 04-01 complete — Flutter scaffold, ProviderScope, Riverpod 2.x, MSG91 SDK)
+Status: Phase 4 in progress — plan 04-01 done; plans 04-02 through 04-04 remaining
+Last activity: 2026-05-20 — Completed plan 04-01 (Flutter scaffold: flutter create, pubspec deps, main.dart ProviderScope, app.dart stub, feature-first dirs; sendotp_flutter_sdk resolved to 0.0.2; flutter analyze clean)
 
-Progress: [████████░░] 62%
+Progress: [█████████░] 65%
 
 ## Performance Metrics
 
@@ -30,6 +30,7 @@ Progress: [████████░░] 62%
 | 01-database-foundation | 3 | 6 min | 2 min |
 | 02-go-auth-api | 4 | 14 min | 3.5 min |
 | 03-go-crud-api | 4 | 8 min | 2 min |
+| 04-flutter-auth-shell | 1 | 4 min | 4 min |
 
 **Recent Trend:**
 - Last 5 plans: 02-01 (3 min), 02-02 (4 min), 02-03 (2 min), 02-04 (5 min), 03-01 (2 min)
@@ -87,6 +88,8 @@ Recent decisions affecting current work:
 - [Phase 03-go-crud-api 03-04]: Monthly IN subquery (not LEFT JOIN on sessions) — avoids date filter being ineffective in LEFT JOIN ON condition; IN subquery correctly scopes present_days to the requested month
 - [Phase 03-go-crud-api 03-04]: attendance_percentage denominator is days_recorded (session days for month) not student-observed days — consistent cross-student comparison, avoids divide-by-zero
 - [Phase 03-go-crud-api 03-04]: TodaySummary returns 200 + zeros (not 404) when no session exists — Flutter Statistics screen uses submitted:false flag to show "No attendance recorded" state
+- [Phase 04-flutter-auth-shell 04-01]: sendotp_flutter_sdk ^1.0.4 not on pub.dev; resolved to 0.0.2 (latest available); OTPWidget.initializeWidget confirmed present in 0.0.2 source — import kept in main.dart unchanged
+- [Phase 04-flutter-auth-shell 04-01]: analysis_options.yaml enables custom_lint plugin and suppresses invalid_annotation_target (required for riverpod_annotation codegen)
 
 ### Pending Todos
 
@@ -99,6 +102,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-19
-Stopped at: Completed 03-04-PLAN.md — stats endpoints (TodaySummary, MonthlySummary, 2 JWT-protected routes, (Removed) display); Phase 3 complete
+Last session: 2026-05-20
+Stopped at: Completed 04-01-PLAN.md — Flutter scaffold (flutter create, pubspec deps, ProviderScope, MSG91 SDK init, feature-first dirs, flutter analyze clean)
 Resume file: None
