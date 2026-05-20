@@ -1,0 +1,44 @@
+name: school_attendance
+description: School attendance management for teachers
+version: 1.0.0+1
+publish_to: 'none'
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # State management
+  flutter_riverpod: ^2.6.1
+  riverpod_annotation: ^2.3.5
+
+  # Navigation
+  go_router: ^14.6.2
+
+  # Secure storage
+  flutter_secure_storage: ^9.2.2
+
+  # HTTP
+  dio: ^5.7.0
+
+  # MSG91 OTP SDK
+  sendotp_flutter_sdk: ^0.0.2
+
+  # Network detection
+  connectivity_plus: ^6.1.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+  # Riverpod codegen
+  riverpod_generator: ^2.4.3
+  build_runner: ^2.4.12
+  riverpod_lint: ^2.3.13
+  custom_lint: ^0.6.8
+
+flutter:
+  uses-material-design: true
