@@ -17,7 +17,7 @@ Phases execute in numeric order. Phase 3 and Phase 4 can be developed in paralle
 - [x] **Phase 3: Go CRUD API** (4/4 plans complete) - Classes, students, attendance endpoints, IST midnight lock, and stats endpoints
 - [x] **Phase 4: Flutter Auth Shell** - Routing, auth guard, JWT refresh interceptor, login and registration screens
 - [x] **Phase 5: Flutter Class + Student Management** - Class list, CRUD screens, student list, dummy seed button
-- [ ] **Phase 6: Flutter Attendance Swipe** - Swipe cards, summary screen, submission flow, and statistics screen
+- [x] **Phase 6: Flutter Attendance Swipe** - Swipe cards, summary screen, submission flow, and statistics screen
 - [ ] **Phase 7: Reports (Backend + Flutter)** - PDF/Excel generation, cron auto-export, Supabase Storage, Flutter download UI
 - [ ] **Phase 8: Integration, QA + Hardening** - IST timezone integration tests, RLS multi-teacher isolation tests, platform compatibility, App Store build
 
@@ -124,11 +124,11 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [ ] 06-01: Swipe card stack widget — evaluate `flutter_card_swiper v7` (1-day spike); implement card with photo/avatar, name, roll, class; Left/Right/Up gestures at 60fps with colored overlays
-- [ ] 06-02: Tap button alternatives (Present / Absent / Leave), undo button (single level), progress indicator, first-launch hint overlay
-- [ ] 06-03: Summary screen — color-coded list, aggregate counts, bottom-sheet status picker, submit confirmation dialog
-- [ ] 06-04: Submission API call (single batch transaction), success navigation to Statistics, read-only summary with Edit option for already-submitted days
-- [ ] 06-05: Statistics screen — today summary card with donut/pie chart (fl_chart), monthly overview, students below 75% named list
+- [x] 06-01: Swipe card stack widget — evaluate `flutter_card_swiper v7` (1-day spike); implement card with photo/avatar, name, roll, class; Left/Right/Up gestures at 60fps with colored overlays
+- [x] 06-02: Tap button alternatives (Present / Absent / Leave), undo button (single level), progress indicator, first-launch hint overlay
+- [x] 06-03: Summary screen — color-coded list, aggregate counts, bottom-sheet status picker, submit confirmation dialog
+- [x] 06-04: Submission API call (single batch transaction), success navigation to Statistics, read-only summary with Edit option for already-submitted days
+- [x] 06-05: Statistics screen — today summary card with donut/pie chart (fl_chart), monthly overview, students below 75% named list
 
 ### Phase 7: Reports (Backend + Flutter)
 **Goal**: Teachers can download PDF and Excel attendance reports for any class and month; reports are also auto-generated on the 1st of every month and stored in Supabase Storage with signed download URLs
@@ -180,6 +180,6 @@ Note: Phase 3 and Phase 4 can be developed in parallel — Flutter Auth Shell do
 | 3. Go CRUD API | 4/4 | Complete | 2026-05-19 |
 | 4. Flutter Auth Shell | 4/4 | Complete | 2026-05-20 |
 | 5. Flutter Class + Student Management | 3/3 | Complete | 2026-05-20 |
-| 6. Flutter Attendance Swipe | 0/5 | Not started | - |
+| 6. Flutter Attendance Swipe | 5/5 | Complete | 2026-05-20 |
 | 7. Reports (Backend + Flutter) | 0/5 | Not started | - |
 | 8. Integration, QA + Hardening | 0/4 | Not started | - |
