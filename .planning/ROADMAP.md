@@ -15,7 +15,7 @@ Phases execute in numeric order. Phase 3 and Phase 4 can be developed in paralle
 - [x] **Phase 1: Database Foundation** (3/3 plans complete) - Supabase schema, RLS policies, and migrations — everything else builds on this
 - [x] **Phase 2: Go Auth API** - JWT authentication, MSG91 OTP, refresh token table, and all auth endpoints
 - [x] **Phase 3: Go CRUD API** (4/4 plans complete) - Classes, students, attendance endpoints, IST midnight lock, and stats endpoints
-- [ ] **Phase 4: Flutter Auth Shell** - Routing, auth guard, JWT refresh interceptor, login and registration screens
+- [x] **Phase 4: Flutter Auth Shell** - Routing, auth guard, JWT refresh interceptor, login and registration screens
 - [ ] **Phase 5: Flutter Class + Student Management** - Class list, CRUD screens, student list, dummy seed button
 - [ ] **Phase 6: Flutter Attendance Swipe** - Swipe cards, summary screen, submission flow, and statistics screen
 - [ ] **Phase 7: Reports (Backend + Flutter)** - PDF/Excel generation, cron auto-export, Supabase Storage, Flutter download UI
@@ -89,10 +89,10 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [ ] 04-01: Flutter project scaffold — feature-first structure, Riverpod 2.x with codegen, go_router, flutter_secure_storage; CI lint/test pipeline
-- [ ] 04-02: Auth state notifier and go_router auth guard; silent refresh on launch; network error vs 401 routing logic
-- [ ] 04-03: Login screen, registration screen, OTP verification screen — connected to Phase 2 Go API
-- [ ] 04-04: Dio QueuedInterceptorsWrapper for JWT refresh; "No internet" overlay with retry; INFRA-04 network state detection
+- [x] 04-01: Flutter project scaffold — feature-first structure, Riverpod 2.x with codegen, go_router, flutter_secure_storage; CI lint/test pipeline
+- [x] 04-02: Auth state notifier and go_router auth guard; silent refresh on launch; network error vs 401 routing logic
+- [x] 04-03: Login screen, registration screen, OTP verification screen — connected to Phase 2 Go API
+- [x] 04-04: Dio QueuedInterceptorsWrapper for JWT refresh; "No internet" overlay with retry; INFRA-04 network state detection
 
 ### Phase 5: Flutter Class + Student Management
 **Goal**: Teachers can manage all their classes and students through the Flutter UI — including creating classes, seeding dummy students, and editing the roster — giving them something meaningful to attend before the swipe feature exists
@@ -177,8 +177,8 @@ Note: Phase 3 and Phase 4 can be developed in parallel — Flutter Auth Shell do
 |-------|----------------|--------|-----------|
 | 1. Database Foundation | 3/3 | Complete | 2026-05-19 |
 | 2. Go Auth API | 4/4 | Complete | 2026-05-19 |
-| 3. Go CRUD API | 3/4 | In Progress|  |
-| 4. Flutter Auth Shell | 0/4 | Not started | - |
+| 3. Go CRUD API | 4/4 | Complete | 2026-05-19 |
+| 4. Flutter Auth Shell | 4/4 | Complete | 2026-05-20 |
 | 5. Flutter Class + Student Management | 0/3 | Not started | - |
 | 6. Flutter Attendance Swipe | 0/5 | Not started | - |
 | 7. Reports (Backend + Flutter) | 0/5 | Not started | - |
