@@ -53,4 +53,13 @@ class StudentsNotifier extends _$StudentsNotifier {
         );
     await refresh();
   }
+
+  Future<int> seed({int count = 30}) async {
+    final created = await ref.read(studentRepositoryProvider).seed(
+          classID: classID,
+          count: count,
+        );
+    await refresh();
+    return created;
+  }
 }

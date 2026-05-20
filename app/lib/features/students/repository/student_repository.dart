@@ -113,4 +113,12 @@ class StudentRepository {
   }) async {
     await _dio.delete('/classes/$classID/students/$studentID');
   }
+
+  Future<int> seed({required String classID, int count = 30}) async {
+    final res = await _dio.post(
+      '/classes/$classID/students/seed',
+      data: {'count': count},
+    );
+    return (res.data as Map<String, dynamic>)['created'] as int? ?? count;
+  }
 }
