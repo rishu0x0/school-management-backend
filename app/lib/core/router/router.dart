@@ -9,7 +9,9 @@ import 'package:school_attendance/features/auth/screens/no_internet_screen.dart'
 import 'package:school_attendance/features/auth/screens/otp_screen.dart';
 import 'package:school_attendance/features/auth/screens/register_screen.dart';
 import 'package:school_attendance/features/auth/screens/splash_screen.dart';
+import 'package:school_attendance/features/classes/screens/class_list_screen.dart';
 import 'package:school_attendance/features/home/home_screen.dart';
+import 'package:school_attendance/features/students/screens/student_list_screen.dart';
 
 part 'router.g.dart';
 
@@ -66,6 +68,16 @@ GoRouter router(Ref ref) {
         },
       ),
       GoRoute(path: '/home', builder: (_, __) => const HomeScreen()),
+      GoRoute(path: '/classes', builder: (_, __) => const ClassListScreen()),
+      GoRoute(
+        path: '/classes/:classID/students',
+        builder: (_, state) {
+          final classID = state.pathParameters['classID']!;
+          final extra = state.extra as Map<String, dynamic>? ?? {};
+          final className = extra['className'] as String? ?? '';
+          return StudentListScreen(classID: classID, className: className);
+        },
+      ),
       GoRoute(
           path: '/no-internet', builder: (_, __) => const NoInternetScreen()),
     ],

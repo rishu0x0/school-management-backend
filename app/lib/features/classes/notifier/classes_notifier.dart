@@ -29,7 +29,7 @@ class ClassesNotifier extends _$ClassesNotifier {
     await refresh();
   }
 
-  Future<void> update({
+  Future<void> updateClass({
     required String classID,
     required String name,
   }) async {
