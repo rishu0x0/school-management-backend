@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:school_attendance/features/classes/repository/class_repository.dart';
 import 'package:school_attendance/features/students/notifier/students_notifier.dart';
 import 'package:school_attendance/features/students/repository/student_repository.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class StudentFormSheet extends ConsumerStatefulWidget {
   const StudentFormSheet({
@@ -26,6 +30,9 @@ class _StudentFormSheetState extends ConsumerState<StudentFormSheet> {
   bool _loading = false;
   String? _error;
 
+  File? _pickedPhoto;
+  String? _existingPhotoUrl;
+
   bool get _isEdit => widget.editStudent != null;
 
   @override
@@ -37,6 +44,7 @@ class _StudentFormSheetState extends ConsumerState<StudentFormSheet> {
           ? widget.editStudent!.rollNumber.toString()
           : '',
     );
+    _existingPhotoUrl = widget.editStudent?.photoUrl;
   }
 
   @override
@@ -44,6 +52,33 @@ class _StudentFormSheetState extends ConsumerState<StudentFormSheet> {
     _nameCtrl.dispose();
     _rollCtrl.dispose();
     super.dispose();
+  }
+
+  Future<void> _pickPhoto() async {
+    final picked = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      maxWidth: 512,
+      maxHeight: 512,
+      imageQuality: 80,
+    );
+    if (picked != null && mounted) {
+      setState(() => _pickedPhoto = File(picked.path));
+    }
+  }
+
+  Future<String?> _uploadPhoto(String studentID) async {
+    if (_pickedPhoto == null) return _existingPhotoUrl;
+    try {
+      final path = '${widget.classID}/$studentID.jpg';
+      await Supabase.instance.client.storage
+          .from('student-photos')
+          .upload(path, _pickedPhoto!, fileOptions: const FileOptions(upsert: true));
+      return Supabase.instance.client.storage
+          .from('student-photos')
+          .getPublicUrl(path);
+    } catch (_) {
+      return _existingPhotoUrl; // graceful fallback if bucket not configured
+    }
   }
 
   Future<void> _submit() async {
@@ -57,19 +92,39 @@ class _StudentFormSheetState extends ConsumerState<StudentFormSheet> {
     final rollNumber = rollText.isNotEmpty ? int.tryParse(rollText) : null;
 
     try {
-      final notifier =
-          ref.read(studentsNotifierProvider(widget.classID).notifier);
       if (_isEdit) {
-        await notifier.updateStudent(
-          studentID: widget.editStudent!.id,
-          fullName: _nameCtrl.text.trim(),
-          rollNumber: rollNumber,
-        );
+        final photoUrl = await _uploadPhoto(widget.editStudent!.id);
+        await ref
+            .read(studentsNotifierProvider(widget.classID).notifier)
+            .updateStudent(
+              studentID: widget.editStudent!.id,
+              fullName: _nameCtrl.text.trim(),
+              rollNumber: rollNumber,
+              photoUrl: photoUrl,
+            );
       } else {
-        await notifier.create(
-          fullName: _nameCtrl.text.trim(),
-          rollNumber: rollNumber,
-        );
+        // Create student first (without photo) to obtain the server-assigned ID
+        final newStudent =
+            await ref.read(studentRepositoryProvider).create(
+              classID: widget.classID,
+              fullName: _nameCtrl.text.trim(),
+              rollNumber: rollNumber,
+            );
+        // Upload photo if picked, then patch student with the public URL
+        if (_pickedPhoto != null) {
+          final photoUrl = await _uploadPhoto(newStudent.id);
+          if (photoUrl != null) {
+            await ref.read(studentRepositoryProvider).update(
+                  classID: widget.classID,
+                  studentID: newStudent.id,
+                  fullName: newStudent.fullName,
+                  photoUrl: photoUrl,
+                );
+          }
+        }
+        await ref
+            .read(studentsNotifierProvider(widget.classID).notifier)
+            .refresh();
       }
       if (mounted) Navigator.of(context).pop(true);
     } on ApiException catch (e) {
@@ -97,6 +152,29 @@ class _StudentFormSheetState extends ConsumerState<StudentFormSheet> {
             Text(
               _isEdit ? 'Edit Student' : 'Add Student',
               style: Theme.of(context).textTheme.titleLarge,
+            ),
+            const SizedBox(height: 16),
+            // Photo picker avatar
+            Center(
+              child: GestureDetector(
+                onTap: _pickPhoto,
+                child: CircleAvatar(
+                  radius: 40,
+                  backgroundColor: Colors.grey.shade200,
+                  backgroundImage: _pickedPhoto != null
+                      ? FileImage(_pickedPhoto!) as ImageProvider
+                      : (_existingPhotoUrl != null &&
+                              _existingPhotoUrl!.isNotEmpty
+                          ? NetworkImage(_existingPhotoUrl!)
+                          : null),
+                  child: (_pickedPhoto == null &&
+                          (_existingPhotoUrl == null ||
+                              _existingPhotoUrl!.isEmpty))
+                      ? const Icon(Icons.add_a_photo,
+                          size: 32, color: Colors.grey)
+                      : null,
+                ),
+              ),
             ),
             const SizedBox(height: 16),
             TextFormField(
