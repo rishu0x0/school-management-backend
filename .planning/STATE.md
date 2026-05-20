@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-05-19)
 ## Current Position
 
 Phase: 4 of 8 (Flutter Auth Shell) — In Progress
-Plan: 1 of 4 in phase 04 (plan 04-01 complete — Flutter scaffold, ProviderScope, Riverpod 2.x, MSG91 SDK)
-Status: Phase 4 in progress — plan 04-01 done; plans 04-02 through 04-04 remaining
-Last activity: 2026-05-20 — Completed plan 04-01 (Flutter scaffold: flutter create, pubspec deps, main.dart ProviderScope, app.dart stub, feature-first dirs; sendotp_flutter_sdk resolved to 0.0.2; flutter analyze clean)
+Plan: 2 of 4 in phase 04 (plan 04-02 complete — Auth state machine, go_router auth guard, silent refresh, MaterialApp.router)
+Status: Phase 4 in progress — plans 04-01 and 04-02 done; plans 04-03 and 04-04 remaining
+Last activity: 2026-05-20 — Completed plan 04-02 (sealed AuthState 5 states, @riverpod AuthNotifier silentRefresh/login/logout, SecureStorageService, RouterNotifier auth guard, screen stubs, flutter analyze clean)
 
 Progress: [█████████░] 65%
 
@@ -30,7 +30,7 @@ Progress: [█████████░] 65%
 | 01-database-foundation | 3 | 6 min | 2 min |
 | 02-go-auth-api | 4 | 14 min | 3.5 min |
 | 03-go-crud-api | 4 | 8 min | 2 min |
-| 04-flutter-auth-shell | 1 | 4 min | 4 min |
+| 04-flutter-auth-shell | 2 | 22 min | 11 min |
 
 **Recent Trend:**
 - Last 5 plans: 02-01 (3 min), 02-02 (4 min), 02-03 (2 min), 02-04 (5 min), 03-01 (2 min)
@@ -90,6 +90,9 @@ Recent decisions affecting current work:
 - [Phase 03-go-crud-api 03-04]: TodaySummary returns 200 + zeros (not 404) when no session exists — Flutter Statistics screen uses submitted:false flag to show "No attendance recorded" state
 - [Phase 04-flutter-auth-shell 04-01]: sendotp_flutter_sdk ^1.0.4 not on pub.dev; resolved to 0.0.2 (latest available); OTPWidget.initializeWidget confirmed present in 0.0.2 source — import kept in main.dart unchanged
 - [Phase 04-flutter-auth-shell 04-01]: analysis_options.yaml enables custom_lint plugin and suppresses invalid_annotation_target (required for riverpod_annotation codegen)
+- [Phase 04-flutter-auth-shell 04-02]: Use bare Ref (not deprecated RouterRef/SecureStorageRef) in @riverpod provider functions — riverpod_generator 2.x emits deprecated typedefs; using Ref directly eliminates warnings
+- [Phase 04-flutter-auth-shell 04-02]: silentRefresh distinguishes SocketException/DioExceptionType.connectionError from HTTP 401 — network error → AuthNetworkError, 401 → AuthUnauthenticated (teachers never logged out by network glitch)
+- [Phase 04-flutter-auth-shell 04-02]: RouterNotifier (ChangeNotifier) bridges Riverpod authNotifierProvider to GoRouter refresh cycle via ref.listen → notifyListeners()
 
 ### Pending Todos
 
@@ -103,5 +106,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-05-20
-Stopped at: Completed 04-01-PLAN.md — Flutter scaffold (flutter create, pubspec deps, ProviderScope, MSG91 SDK init, feature-first dirs, flutter analyze clean)
+Stopped at: Completed 04-02-PLAN.md — Auth state machine (sealed AuthState 5 states), @riverpod AuthNotifier (silentRefresh/login/logout), SecureStorageService, RouterNotifier auth guard, screen stubs, flutter analyze clean
 Resume file: None
