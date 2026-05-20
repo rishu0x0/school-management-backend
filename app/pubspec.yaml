@@ -41,6 +41,12 @@ dependencies:
   # Cached network image for displaying photos
   cached_network_image: ^3.4.1
 
+  # Swipe cards
+  flutter_card_swiper: ^7.0.0
+
+  # Charts for statistics screen
+  fl_chart: ^0.69.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
