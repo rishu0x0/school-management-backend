@@ -59,6 +59,9 @@ GoRouter router(Ref ref) {
             reqId: extra['reqId'] as String? ?? '',
             mobile: extra['mobile'] as String? ?? '',
             isRegistration: extra['isRegistration'] as bool? ?? true,
+            name: extra['name'] as String?,
+            schoolName: extra['schoolName'] as String?,
+            password: extra['password'] as String?,
           );
         },
       ),
