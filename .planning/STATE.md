@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-05-19)
 
 **Core value:** A teacher can open the app, swipe through their class in under 2 minutes, and have attendance recorded — with monthly reports generated automatically on the 1st of each month.
-**Current focus:** Phase 6 — Flutter Attendance Swipe (Phase 5 complete 2026-05-20)
+**Current focus:** Phase 7 — (Phase 6 Flutter Attendance Swipe complete 2026-05-20)
 
 ## Current Position
 
-Phase: 6 of 8 (Flutter Attendance Swipe) — Not started
-Plan: 0 of N in phase 06
-Status: Phase 5 complete (all 3 plans done) — next phase is Phase 6 Flutter Attendance Swipe
-Last activity: 2026-05-20 — Completed plan 05-03 (seed flow, photo upload via Supabase Storage, flutter analyze zero errors)
+Phase: 7 of 8 — next phase after Flutter Attendance Swipe
+Plan: 0 of N in phase 07
+Status: Phase 6 complete (all 5 plans done) — next phase is Phase 7
+Last activity: 2026-05-20 — Completed plans 06-02 through 06-05 (status button row, summary screen, submit screen with midnight-lock dialog, statistics screen with fl_chart PieChart donut, monthly overview, below-75% list; flutter analyze zero issues)
 
-Progress: [████████████] 75%
+Progress: [██████████████] 87%
 
 ## Performance Metrics
 
@@ -119,5 +119,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-05-20
-Stopped at: Completed 05-03-PLAN.md — Phase 5 complete. seed() in StudentRepository + StudentsNotifier, seed button wired in StudentListScreen, photo picker (image_picker + Supabase Storage) in StudentFormSheet with graceful fallback, flutter analyze zero errors. Next: Phase 6 Flutter Attendance Swipe.
+Stopped at: Completed 06-02 through 06-05 — Phase 6 complete. StatusButtonRow (tap buttons), AttendanceSummaryScreen (status chips, aggregate counts, picker), AttendanceSubmitScreen (midnight-lock dialog, submitBatch API call), AttendanceSwipeScreen (_checkExistingSession redirect), StatsRepository + StatsNotifier + StatsScreen (fl_chart PieChart donut, monthly overview, below-75% list). flutter analyze zero issues. Next: Phase 7.
 Resume file: None
