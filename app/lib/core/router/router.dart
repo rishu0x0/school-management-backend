@@ -9,8 +9,12 @@ import 'package:school_attendance/features/auth/screens/no_internet_screen.dart'
 import 'package:school_attendance/features/auth/screens/otp_screen.dart';
 import 'package:school_attendance/features/auth/screens/register_screen.dart';
 import 'package:school_attendance/features/auth/screens/splash_screen.dart';
+import 'package:school_attendance/features/attendance/screens/attendance_submit_screen.dart';
+import 'package:school_attendance/features/attendance/screens/attendance_summary_screen.dart';
+import 'package:school_attendance/features/attendance/screens/attendance_swipe_screen.dart';
 import 'package:school_attendance/features/classes/screens/class_list_screen.dart';
 import 'package:school_attendance/features/home/home_screen.dart';
+import 'package:school_attendance/features/stats/screens/stats_screen.dart';
 import 'package:school_attendance/features/students/screens/student_list_screen.dart';
 
 part 'router.g.dart';
@@ -76,6 +80,42 @@ GoRouter router(Ref ref) {
           final extra = state.extra as Map<String, dynamic>? ?? {};
           final className = extra['className'] as String? ?? '';
           return StudentListScreen(classID: classID, className: className);
+        },
+      ),
+      GoRoute(
+        path: '/classes/:classID/attendance',
+        builder: (_, state) {
+          final classID = state.pathParameters['classID']!;
+          final extra = state.extra as Map<String, dynamic>? ?? {};
+          final className = extra['className'] as String? ?? '';
+          return AttendanceSwipeScreen(classID: classID, className: className);
+        },
+      ),
+      GoRoute(
+        path: '/classes/:classID/attendance/summary',
+        builder: (_, state) {
+          final classID = state.pathParameters['classID']!;
+          final extra = state.extra as Map<String, dynamic>? ?? {};
+          final className = extra['className'] as String? ?? '';
+          return AttendanceSummaryScreen(classID: classID, className: className);
+        },
+      ),
+      GoRoute(
+        path: '/classes/:classID/attendance/submit',
+        builder: (_, state) {
+          final classID = state.pathParameters['classID']!;
+          final extra = state.extra as Map<String, dynamic>? ?? {};
+          final className = extra['className'] as String? ?? '';
+          return AttendanceSubmitScreen(classID: classID, className: className);
+        },
+      ),
+      GoRoute(
+        path: '/classes/:classID/stats',
+        builder: (_, state) {
+          final classID = state.pathParameters['classID']!;
+          final extra = state.extra as Map<String, dynamic>? ?? {};
+          final className = extra['className'] as String? ?? '';
+          return StatsScreen(classID: classID, className: className);
         },
       ),
       GoRoute(

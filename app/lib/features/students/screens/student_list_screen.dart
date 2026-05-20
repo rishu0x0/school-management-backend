@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:go_router/go_router.dart';
 import 'package:school_attendance/features/students/notifier/students_notifier.dart';
 import 'package:school_attendance/features/students/repository/student_repository.dart';
 import 'package:school_attendance/features/students/widgets/student_form_sheet.dart';
@@ -90,6 +91,14 @@ class StudentListScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Text(className),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.how_to_reg),
+            tooltip: 'Take Attendance',
+            onPressed: () => context.push(
+              '/classes/$classID/attendance',
+              extra: {'className': className},
+            ),
+          ),
           PopupMenuButton<String>(
             onSelected: (action) {
               if (action == 'seed') {

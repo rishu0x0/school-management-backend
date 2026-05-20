@@ -133,7 +133,14 @@ class ClassListScreen extends ConsumerWidget {
                         subtitle.isNotEmpty ? Text(subtitle) : null,
                     trailing: PopupMenuButton<String>(
                       onSelected: (action) async {
-                        if (action == 'edit') {
+                        if (action == 'attendance') {
+                          if (context.mounted) {
+                            context.push(
+                              '/classes/${cls.id}/attendance',
+                              extra: {'className': cls.name},
+                            );
+                          }
+                        } else if (action == 'edit') {
                           await _openEditSheet(context, ref, cls);
                         } else if (action == 'delete') {
                           await showDeleteClassFlow(
@@ -144,6 +151,14 @@ class ClassListScreen extends ConsumerWidget {
                         }
                       },
                       itemBuilder: (_) => const [
+                        PopupMenuItem(
+                          value: 'attendance',
+                          child: ListTile(
+                            leading: Icon(Icons.how_to_reg),
+                            title: Text('Take Attendance'),
+                            contentPadding: EdgeInsets.zero,
+                          ),
+                        ),
                         PopupMenuItem(value: 'edit', child: Text('Edit')),
                         PopupMenuItem(
                           value: 'delete',
