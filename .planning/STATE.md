@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-05-19)
 
 **Core value:** A teacher can open the app, swipe through their class in under 2 minutes, and have attendance recorded — with monthly reports generated automatically on the 1st of each month.
-**Current focus:** Phase 4 — Flutter Auth Shell (Phase 3 complete)
+**Current focus:** Phase 5 — Flutter Class & Student Management (Phase 4 complete)
 
 ## Current Position
 
-Phase: 4 of 8 (Flutter Auth Shell) — Complete (2026-05-20)
-Plan: 4 of 4 in phase 04 (plan 04-04 complete — Dio QueuedInterceptorsWrapper JWT refresh, NetworkNotifier, offline banner overlay)
-Status: Phase 4 complete — all 4 plans done; next phase is Phase 5
-Last activity: 2026-05-20 — Completed plan 04-04 (Dio JWT refresh interceptor, connectivity_plus NetworkNotifier, no-internet Stack overlay in app.dart, flutter analyze zero errors)
+Phase: 5 of 8 (Flutter Class & Student Management) — In progress (2026-05-20)
+Plan: 1 of 3 in phase 05 (plan 05-01 complete — ClassRepository, ClassesNotifier, ClassListScreen, delete-warning flow, router wired)
+Status: Phase 5 plan 1 complete — 2 plans remain (05-02 student list, 05-03 swipe attendance)
+Last activity: 2026-05-20 — Completed plan 05-01 (ClassRepository CRUD, ClassesNotifier AsyncNotifier, ClassListScreen with empty state/FAB/popup, two-step delete-warning flow, flutter analyze zero errors)
 
 Progress: [██████████] 70%
 
@@ -39,6 +39,7 @@ Progress: [██████████] 70%
 *Updated after each plan completion*
 | Phase 03-go-crud-api P02 | 2 | 2 tasks | 3 files |
 | Phase 03-go-crud-api P03 | 2 | 3 tasks | 4 files |
+| Phase 05-flutter-class-student-management P01 | 525199 | 4 tasks | 12 files |
 
 ## Accumulated Context
 
@@ -97,6 +98,8 @@ Recent decisions affecting current work:
 - [Phase 04-flutter-auth-shell 04-04]: Fresh Dio used for /auth/refresh POST and for retry — avoids re-entering _JwtInterceptor chain, prevents infinite refresh loops
 - [Phase 04-flutter-auth-shell 04-04]: NetworkNotifier initialises to true (assume connected); connectivity_plus stream corrects state; offline banner is a Stack overlay not a route redirect
 - [Phase 04-flutter-auth-shell 04-04]: connectivity_plus v6+ emits List<ConnectivityResult> — listener uses .any((r) => r != ConnectivityResult.none) to derive bool
+- [Phase 05-flutter-class-student-management]: Renamed ClassesNotifier.update to updateClass to avoid AsyncNotifierBase.update collision
+- [Phase 05-flutter-class-student-management]: showDeleteClassFlow as top-level function (not widget class) for clean delete-warning two-step flow
 
 ### Pending Todos
 
@@ -110,5 +113,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-05-20
-Stopped at: Completed 04-04-PLAN.md — Dio QueuedInterceptorsWrapper JWT refresh interceptor, connectivity_plus NetworkNotifier, no-internet Stack overlay banner in app.dart, flutter analyze zero errors. Phase 4 Flutter Auth Shell complete.
+Stopped at: Completed 05-01-PLAN.md — ClassRepository (list/create/update/delete with confirm flag), ClassesNotifier (AsyncNotifier with refresh/create/updateClass/getDeleteWarning/confirmDelete), ClassListScreen (empty state, FAB, pull-to-refresh, popup edit/delete, tap-to-navigate), two-step Go delete-warning flow, HomeScreen redirects to /classes, router wired with /classes and /classes/:classID/students, flutter analyze zero errors.
 Resume file: None
