@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -8,7 +9,7 @@ const _keyRefreshToken = 'refresh_token';
 const _keyTeacherID = 'teacher_id';
 
 @riverpod
-SecureStorageService secureStorage(SecureStorageRef ref) {
+SecureStorageService secureStorage(Ref ref) {
   return SecureStorageService();
 }
 
