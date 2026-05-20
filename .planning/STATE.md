@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-05-19)
 ## Current Position
 
 Phase: 5 of 8 (Flutter Class & Student Management) — In progress (2026-05-20)
-Plan: 1 of 3 in phase 05 (plan 05-01 complete — ClassRepository, ClassesNotifier, ClassListScreen, delete-warning flow, router wired)
-Status: Phase 5 plan 1 complete — 2 plans remain (05-02 student list, 05-03 swipe attendance)
-Last activity: 2026-05-20 — Completed plan 05-01 (ClassRepository CRUD, ClassesNotifier AsyncNotifier, ClassListScreen with empty state/FAB/popup, two-step delete-warning flow, flutter analyze zero errors)
+Plan: 2 of 3 in phase 05 (plan 05-02 complete — StudentRepository, StudentsNotifier, StudentListScreen, StudentFormSheet)
+Status: Phase 5 plan 2 complete — 1 plan remains (05-03 swipe attendance)
+Last activity: 2026-05-20 — Completed plan 05-02 (StudentRepository Dio CRUD, StudentsNotifier family pattern, StudentListScreen Slidable soft-remove, StudentFormSheet, flutter analyze zero errors)
 
 Progress: [██████████] 70%
 
@@ -100,6 +100,8 @@ Recent decisions affecting current work:
 - [Phase 04-flutter-auth-shell 04-04]: connectivity_plus v6+ emits List<ConnectivityResult> — listener uses .any((r) => r != ConnectivityResult.none) to derive bool
 - [Phase 05-flutter-class-student-management]: Renamed ClassesNotifier.update to updateClass to avoid AsyncNotifierBase.update collision
 - [Phase 05-flutter-class-student-management]: showDeleteClassFlow as top-level function (not widget class) for clean delete-warning two-step flow
+- [Phase 05-flutter-class-student-management 05-02]: Renamed StudentsNotifier.update to updateStudent — same AsyncNotifierBase.update collision pattern
+- [Phase 05-flutter-class-student-management 05-02]: Undo SnackBar dismisses only — soft-remove is server-side committed; true undo requires re-activate endpoint (out of scope)
 
 ### Pending Todos
 
@@ -113,5 +115,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-05-20
-Stopped at: Completed 05-01-PLAN.md — ClassRepository (list/create/update/delete with confirm flag), ClassesNotifier (AsyncNotifier with refresh/create/updateClass/getDeleteWarning/confirmDelete), ClassListScreen (empty state, FAB, pull-to-refresh, popup edit/delete, tap-to-navigate), two-step Go delete-warning flow, HomeScreen redirects to /classes, router wired with /classes and /classes/:classID/students, flutter analyze zero errors.
+Stopped at: Completed 05-02-PLAN.md — StudentRepository (list/create/update/softRemove via Dio), StudentsNotifier (family pattern with classID, updateStudent to avoid collision), StudentListScreen (Slidable edit+remove, grey-italic removed entries, empty state, pull-to-refresh, undo SnackBar), StudentFormSheet (name required, roll optional), flutter analyze zero errors.
 Resume file: None
