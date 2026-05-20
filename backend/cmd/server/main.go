@@ -19,6 +19,7 @@ import (
 	"school-management/backend/internal/config"
 	"school-management/backend/internal/db"
 	"school-management/backend/internal/msg91"
+	"school-management/backend/internal/reports"
 	"school-management/backend/internal/stats"
 	"school-management/backend/internal/students"
 	jwtpkg "school-management/backend/pkg/jwt"
@@ -60,6 +61,12 @@ func main() {
 	statsSvc := stats.NewService(pool)
 	statsHandler := stats.NewHandler(statsSvc)
 
+	storageClient := reports.NewStorageClient(cfg.SupabaseURL, cfg.SupabaseServiceRoleKey)
+	reportSvc := reports.NewService(pool, storageClient)
+	reportHandler := reports.NewHandler(reportSvc)
+	stopCron := reports.StartCron(pool, reportSvc)
+	defer stopCron()
+
 	r.Route("/auth", func(r chi.Router) {
 		r.Post("/register/send-otp", authHandler.SendRegistrationOTP)
 		r.Post("/register/verify-otp", authHandler.VerifyRegistrationOTP)
@@ -97,6 +104,11 @@ func main() {
 		// Stats (plan 03-04)
 		r.Get("/classes/{classID}/stats/today", statsHandler.Today)
 		r.Get("/classes/{classID}/stats/monthly", statsHandler.Monthly)
+
+		// Reports (plan 07-04)
+		r.Post("/reports/generate", reportHandler.Generate)
+		r.Get("/reports", reportHandler.List)
+		r.Get("/reports/{reportID}/status", reportHandler.StatusCheck)
 	})
 
 	srv := &http.Server{

@@ -15,6 +15,7 @@ import 'package:school_attendance/features/attendance/screens/attendance_swipe_s
 import 'package:school_attendance/features/classes/screens/class_list_screen.dart';
 import 'package:school_attendance/features/home/home_screen.dart';
 import 'package:school_attendance/features/stats/screens/stats_screen.dart';
+import 'package:school_attendance/features/reports/screens/reports_screen.dart';
 import 'package:school_attendance/features/students/screens/student_list_screen.dart';
 
 part 'router.g.dart';
@@ -117,6 +118,10 @@ GoRouter router(Ref ref) {
           final className = extra['className'] as String? ?? '';
           return StatsScreen(classID: classID, className: className);
         },
+      ),
+      GoRoute(
+        path: '/reports',
+        builder: (_, __) => const ReportsScreen(),
       ),
       GoRoute(
           path: '/no-internet', builder: (_, __) => const NoInternetScreen()),

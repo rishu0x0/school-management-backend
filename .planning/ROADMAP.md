@@ -18,7 +18,7 @@ Phases execute in numeric order. Phase 3 and Phase 4 can be developed in paralle
 - [x] **Phase 4: Flutter Auth Shell** - Routing, auth guard, JWT refresh interceptor, login and registration screens
 - [x] **Phase 5: Flutter Class + Student Management** - Class list, CRUD screens, student list, dummy seed button
 - [x] **Phase 6: Flutter Attendance Swipe** - Swipe cards, summary screen, submission flow, and statistics screen
-- [ ] **Phase 7: Reports (Backend + Flutter)** - PDF/Excel generation, cron auto-export, Supabase Storage, Flutter download UI
+- [x] **Phase 7: Reports (Backend + Flutter)** - PDF/Excel generation, cron auto-export, Supabase Storage, Flutter download UI
 - [ ] **Phase 8: Integration, QA + Hardening** - IST timezone integration tests, RLS multi-teacher isolation tests, platform compatibility, App Store build
 
 ## Phase Details
@@ -143,11 +143,11 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [ ] 07-01: PDF generation with maroto v2 — cover page, data pages (25-student pagination, 31-column A4 landscape layout prototype first), summary page; `—` for missing days
-- [ ] 07-02: Excel generation with excelize v2 — two-sheet structure, conditional formatting (green/red/yellow); test output in both MS Excel and Google Sheets
-- [ ] 07-03: Monthly cron job (`35 18 1 * *` UTC = 00:05 IST) with bounded worker pool (max 10 concurrent); Supabase Storage upload; 90-day cleanup cron; signed URL generation
-- [ ] 07-04: Manual report trigger endpoint (`POST /reports/generate`); loading state; in-app notification on completion (RPT-09)
-- [ ] 07-05: Flutter Reports screen — class/month selector, trigger button, loading indicator, download link display; open/share file via `open_filex`
+- [x] 07-01: PDF generation with maroto v2 — cover page, data pages (25-student pagination, 31-column A4 landscape layout prototype first), summary page; `—` for missing days
+- [x] 07-02: Excel generation with excelize v2 — two-sheet structure, conditional formatting (green/red/yellow); test output in both MS Excel and Google Sheets
+- [x] 07-03: Monthly cron job (`35 18 1 * *` UTC = 00:05 IST) with bounded worker pool (max 10 concurrent); Supabase Storage upload; 90-day cleanup cron; signed URL generation
+- [x] 07-04: Manual report trigger endpoint (`POST /reports/generate`); loading state; in-app notification on completion (RPT-09)
+- [x] 07-05: Flutter Reports screen — class/month selector, trigger button, loading indicator, download link display; open/share file via `open_filex`
 
 ### Phase 8: Integration, QA + Hardening
 **Goal**: The full system works end-to-end under realistic conditions — IST midnight lock is correct, RLS prevents cross-teacher data access, the app meets performance targets, and production builds are submitted to both app stores
@@ -181,5 +181,5 @@ Note: Phase 3 and Phase 4 can be developed in parallel — Flutter Auth Shell do
 | 4. Flutter Auth Shell | 4/4 | Complete | 2026-05-20 |
 | 5. Flutter Class + Student Management | 3/3 | Complete | 2026-05-20 |
 | 6. Flutter Attendance Swipe | 5/5 | Complete | 2026-05-20 |
-| 7. Reports (Backend + Flutter) | 0/5 | Not started | - |
+| 7. Reports (Backend + Flutter) | 5/5 | Complete | 2026-05-20 |
 | 8. Integration, QA + Hardening | 0/4 | Not started | - |

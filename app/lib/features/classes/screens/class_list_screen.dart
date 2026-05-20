@@ -36,6 +36,11 @@ class ClassListScreen extends ConsumerWidget {
         title: const Text('My Classes'),
         actions: [
           IconButton(
+            icon: const Icon(Icons.summarize),
+            tooltip: 'Reports',
+            onPressed: () => context.push('/reports'),
+          ),
+          IconButton(
             icon: const Icon(Icons.logout),
             tooltip: 'Logout',
             onPressed: () => ref.read(authNotifierProvider.notifier).logout(),

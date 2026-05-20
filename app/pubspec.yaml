@@ -46,6 +46,7 @@ dependencies:
 
   # Charts for statistics screen
   fl_chart: ^0.69.0
+  url_launcher: ^6.3.2
 
 dev_dependencies:
   flutter_test:
