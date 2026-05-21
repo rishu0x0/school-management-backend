@@ -2,10 +2,12 @@
 .env
 .env.local
 .env.*.local
+!.env.example
 
 # Go build output
-/bin/
-/dist/
+bin/
+dist/
+tmp/
 
 # Go test cache
 *.test
@@ -18,6 +20,6 @@
 .vscode/
 .idea/
 
-# Supabase local state (not needed in git)
+# Supabase local state
 supabase/.branches/
 supabase/.temp/
