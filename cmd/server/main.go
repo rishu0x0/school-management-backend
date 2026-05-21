@@ -15,6 +15,7 @@ import (
 	"github.com/joho/godotenv"
 	"school-management/backend/internal/attendance"
 	"school-management/backend/internal/auth"
+	"school-management/backend/internal/apilog"
 	"school-management/backend/internal/classes"
 	"school-management/backend/internal/config"
 	"school-management/backend/internal/db"
@@ -40,6 +41,9 @@ func main() {
 	r.Use(middleware.RealIP)
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.Timeout(30 * time.Second))
+	r.Use(apilog.Middleware(pool, func(r *http.Request) string {
+		return auth.TeacherIDFromContext(r.Context())
+	}))
 
 	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
