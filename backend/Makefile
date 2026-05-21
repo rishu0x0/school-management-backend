@@ -1,7 +1,7 @@
 .PHONY: run build test lint tidy
 
 run:
-	go run ./cmd/server
+	set -a && source ../.env && set +a && go run ./cmd/server
 
 build:
 	go build -o bin/server ./cmd/server

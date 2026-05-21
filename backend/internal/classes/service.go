@@ -40,7 +40,7 @@ func NewService(db *pgxpool.Pool) *Service {
 
 func (s *Service) List(ctx context.Context, teacherID string) ([]Class, error) {
 	rows, err := s.db.Query(ctx,
-		`SELECT id, teacher_id, name, section, subject, created_at
+		`SELECT id, teacher_id, name, section, subject, created_at::text
 		 FROM classes
 		 WHERE teacher_id = $1
 		 ORDER BY name`,
@@ -75,7 +75,7 @@ func (s *Service) Create(ctx context.Context, teacherID, name, section, subject 
 	err := s.db.QueryRow(ctx,
 		`INSERT INTO classes (teacher_id, name, section, subject)
 		 VALUES ($1, $2, $3, $4)
-		 RETURNING id, teacher_id, name, section, subject, created_at`,
+		 RETURNING id, teacher_id, name, section, subject, created_at::text`,
 		teacherID,
 		name,
 		nullableString(section),
@@ -100,7 +100,7 @@ func (s *Service) Update(ctx context.Context, teacherID, classID, name string) (
 	err := s.db.QueryRow(ctx,
 		`UPDATE classes SET name = $1
 		 WHERE id = $2 AND teacher_id = $3
-		 RETURNING id, teacher_id, name, section, subject, created_at`,
+		 RETURNING id, teacher_id, name, section, subject, created_at::text`,
 		name, classID, teacherID,
 	).Scan(&c.ID, &c.TeacherID, &c.Name, &c.Section, &c.Subject, &c.CreatedAt)
 	if err != nil {

@@ -103,7 +103,7 @@ func (h *ReportHandler) List(w http.ResponseWriter, r *http.Request) {
 			Status:    rpt.Status,
 			ErrorMsg:  rpt.ErrorMsg,
 			SignedURL: rpt.SignedURL,
-			CreatedAt: rpt.CreatedAt.Format(time.RFC3339),
+			CreatedAt: rpt.CreatedAt,
 		}
 	}
 

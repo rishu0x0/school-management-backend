@@ -55,7 +55,7 @@ func (s *Service) List(ctx context.Context, classID, teacherID string) ([]Studen
 	}
 
 	rows, err := s.db.Query(ctx,
-		`SELECT id, class_id, roll_number, full_name, photo_url, is_active, created_at
+		`SELECT id, class_id, roll_number, full_name, photo_url, is_active, created_at::text
 		 FROM students
 		 WHERE class_id = $1
 		 ORDER BY roll_number ASC`,
@@ -105,7 +105,7 @@ func (s *Service) Create(ctx context.Context, classID, teacherID, fullName strin
 	err := s.db.QueryRow(ctx,
 		`INSERT INTO students (class_id, roll_number, full_name, photo_url)
 		 VALUES ($1, $2, $3, $4)
-		 RETURNING id, class_id, roll_number, full_name, photo_url, is_active, created_at`,
+		 RETURNING id, class_id, roll_number, full_name, photo_url, is_active, created_at::text`,
 		classID, *rollNumber, fullName, nullableString(photoURL),
 	).Scan(&st.ID, &st.ClassID, &st.RollNumber, &st.FullName, &st.PhotoURL, &st.IsActive, &st.CreatedAt)
 	if err != nil {
@@ -158,7 +158,7 @@ func (s *Service) Update(ctx context.Context, classID, teacherID, studentID stri
 	args = append(args, studentID, classID)
 	query := fmt.Sprintf(
 		`UPDATE students SET %s WHERE id = $%d AND class_id = $%d
-		 RETURNING id, class_id, roll_number, full_name, photo_url, is_active, created_at`,
+		 RETURNING id, class_id, roll_number, full_name, photo_url, is_active, created_at::text`,
 		strings.Join(setClauses, ", "), argIdx, argIdx+1,
 	)
 

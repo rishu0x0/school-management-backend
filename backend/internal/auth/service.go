@@ -226,6 +226,40 @@ func nullableString(s string) interface{} {
 	return s
 }
 
+// RegisterDirect creates a teacher account immediately without OTP verification.
+func (s *Service) RegisterDirect(ctx context.Context, name, mobile, schoolName, password string) (accessToken, refreshToken, teacherID string, err error) {
+	if err = validateRegistrationFields(name, mobile, schoolName, password); err != nil {
+		return "", "", "", err
+	}
+
+	var exists bool
+	if err = s.db.QueryRow(ctx,
+		`SELECT EXISTS(SELECT 1 FROM teachers WHERE mobile = $1)`, mobile,
+	).Scan(&exists); err != nil {
+		return "", "", "", fmt.Errorf("db check: %w", err)
+	}
+	if exists {
+		return "", "", "", ErrDuplicateMobile
+	}
+
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), 12)
+	if err != nil {
+		return "", "", "", fmt.Errorf("hash password: %w", err)
+	}
+
+	if err = s.db.QueryRow(ctx,
+		`INSERT INTO teachers (name, mobile, school_name, password_hash, is_verified)
+		 VALUES ($1, $2, $3, $4, TRUE)
+		 RETURNING id`,
+		name, mobile, schoolName, string(hash),
+	).Scan(&teacherID); err != nil {
+		return "", "", "", fmt.Errorf("create teacher: %w", err)
+	}
+
+	at, rt, err := s.issueTokens(ctx, teacherID, mobile, schoolName, "")
+	return at, rt, teacherID, err
+}
+
 // Login verifies mobile + password and issues tokens on success.
 // Returns ErrInvalidCredentials for any invalid combination (never reveals which field failed).
 func (s *Service) Login(ctx context.Context, mobile, password, deviceHint string) (accessToken, refreshToken string, err error) {

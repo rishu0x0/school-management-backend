@@ -3,6 +3,7 @@ package attendance
 import (
 	"encoding/json"
 	"errors"
+	"log"
 	"net/http"
 	"time"
 
@@ -45,7 +46,8 @@ func (h *Handler) GetByDate(w http.ResponseWriter, r *http.Request) {
 			writeJSON(w, http.StatusOK, map[string]interface{}{"session": nil, "records": []struct{}{}})
 			return
 		}
-		writeError(w, http.StatusInternalServerError, "internal_error", "Failed to get attendance")
+		log.Printf("ERROR GetByDate classID=%s: %v", classID, err)
+		writeError(w, http.StatusInternalServerError, "internal_error", err.Error())
 		return
 	}
 	writeJSON(w, http.StatusOK, session)
@@ -94,7 +96,8 @@ func (h *Handler) SubmitBatch(w http.ResponseWriter, r *http.Request) {
 			writeError(w, http.StatusBadRequest, "invalid_status", "Status must be one of: present, absent, leave")
 			return
 		}
-		writeError(w, http.StatusInternalServerError, "internal_error", "Failed to submit attendance")
+		log.Printf("ERROR SubmitBatch classID=%s: %v", classID, err)
+		writeError(w, http.StatusInternalServerError, "internal_error", err.Error())
 		return
 	}
 	writeJSON(w, http.StatusCreated, session)
@@ -137,7 +140,8 @@ func (h *Handler) EditRecords(w http.ResponseWriter, r *http.Request) {
 			writeError(w, http.StatusBadRequest, "invalid_status", "Status must be one of: present, absent, leave")
 			return
 		}
-		writeError(w, http.StatusInternalServerError, "internal_error", "Failed to edit attendance")
+		log.Printf("ERROR EditRecords classID=%s sessionID=%s: %v", classID, sessionID, err)
+		writeError(w, http.StatusInternalServerError, "internal_error", err.Error())
 		return
 	}
 	writeJSON(w, http.StatusOK, session)

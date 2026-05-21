@@ -62,6 +62,7 @@ type verifyOTPRequest struct {
 type tokenResponse struct {
 	AccessToken  string `json:"access_token"`
 	RefreshToken string `json:"refresh_token"`
+	TeacherID    string `json:"teacher_id,omitempty"`
 }
 
 func (h *Handler) VerifyRegistrationOTP(w http.ResponseWriter, r *http.Request) {
@@ -99,6 +100,42 @@ func (h *Handler) VerifyRegistrationOTP(w http.ResponseWriter, r *http.Request) 
 	writeJSON(w, http.StatusCreated, tokenResponse{
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
+	})
+}
+
+type registerRequest struct {
+	Name       string `json:"name"`
+	Mobile     string `json:"mobile"`
+	SchoolName string `json:"school_name"`
+	Password   string `json:"password"`
+}
+
+func (h *Handler) Register(w http.ResponseWriter, r *http.Request) {
+	var req registerRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		writeError(w, http.StatusBadRequest, "invalid_json", "request body is not valid JSON")
+		return
+	}
+
+	accessToken, refreshToken, teacherID, err := h.svc.RegisterDirect(r.Context(), req.Name, req.Mobile, req.SchoolName, req.Password)
+	if err != nil {
+		var ve *ValidationError
+		if errors.As(err, &ve) {
+			writeError(w, http.StatusBadRequest, "validation_error", ve.Message)
+			return
+		}
+		if errors.Is(err, ErrDuplicateMobile) {
+			writeError(w, http.StatusConflict, "duplicate_mobile", "This mobile number is already registered. Please login.")
+			return
+		}
+		writeError(w, http.StatusInternalServerError, "internal_error", "Registration failed")
+		return
+	}
+
+	writeJSON(w, http.StatusCreated, tokenResponse{
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+		TeacherID:    teacherID,
 	})
 }
 

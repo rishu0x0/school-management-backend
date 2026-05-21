@@ -3,11 +3,14 @@ package reports
 import (
 	"context"
 	"fmt"
+	"regexp"
 	"strings"
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
+
+var unsafeChars = regexp.MustCompile(`[^a-zA-Z0-9_-]`)
 
 // ReportRow is the DB view returned to clients.
 type ReportRow struct {
@@ -20,7 +23,7 @@ type ReportRow struct {
 	ErrorMsg    *string
 	StoragePath string
 	SignedURL   *string
-	CreatedAt   time.Time
+	CreatedAt   string
 }
 
 // ReportService orchestrates: fetch data → generate → upload → save DB row.
@@ -76,7 +79,7 @@ func (s *ReportService) GenerateReport(ctx context.Context, reportID, classID, t
 		return err
 	}
 
-	safeName := strings.ReplaceAll(data.ClassName, " ", "_")
+	safeName := unsafeChars.ReplaceAllString(strings.ReplaceAll(data.ClassName, " ", "_"), "")
 	fileName := fmt.Sprintf("%s_Attendance_%s.%s", safeName, month, ext)
 	storagePath := fmt.Sprintf("%s/%s/%s", classID, month, fileName)
 
@@ -104,7 +107,7 @@ func (s *ReportService) GenerateReport(ctx context.Context, reportID, classID, t
 func (s *ReportService) ListReports(ctx context.Context, teacherID string) ([]ReportRow, error) {
 	rows, err := s.pool.Query(ctx, `
 		SELECT id, class_id, month, format, file_name, status, error_msg,
-		       storage_path, signed_url, signed_url_expires_at, created_at
+		       COALESCE(storage_path, ''), signed_url, signed_url_expires_at, created_at::text
 		FROM reports
 		WHERE teacher_id=$1 AND expires_at > NOW()
 		ORDER BY created_at DESC
@@ -124,11 +127,12 @@ func (s *ReportService) ListReports(ctx context.Context, teacherID string) ([]Re
 			&r.Status, &r.ErrorMsg, &r.StoragePath, &r.SignedURL,
 			&signedURLExpires, &r.CreatedAt,
 		); err != nil {
-			return nil, err
+			return nil, fmt.Errorf("scan report row: %w", err)
 		}
-		// Refresh signed URL if expired or missing
-		if r.Status == "ready" && r.StoragePath != "" &&
-			(r.SignedURL == nil || signedURLExpires == nil || time.Now().After(*signedURLExpires)) {
+		// Refresh if expired, missing, or URL is malformed (missing /storage/v1/)
+		urlBad := r.SignedURL == nil || !strings.Contains(*r.SignedURL, "/storage/v1/")
+		expBad := signedURLExpires == nil || time.Now().After(*signedURLExpires)
+		if r.Status == "ready" && r.StoragePath != "" && (urlBad || expBad) {
 			url, exp, err := s.storage.SignedURL(r.StoragePath, 7*24*3600)
 			if err == nil {
 				r.SignedURL = &url

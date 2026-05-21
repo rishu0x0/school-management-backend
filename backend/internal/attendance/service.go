@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
 	"strings"
 	"time"
 
@@ -68,24 +69,27 @@ func (s *Service) verifyClassOwnership(ctx context.Context, classID, teacherID s
 // SubmitBatch saves an attendance session and all records in a single transaction.
 // Returns ErrDuplicateSession if attendance already exists for this class+date.
 func (s *Service) SubmitBatch(ctx context.Context, classID, teacherID string, date time.Time, records []BatchRecord) (*Session, error) {
+	log.Printf("[attendance] SubmitBatch start classID=%s teacherID=%s date=%s records=%d", classID, teacherID, date.Format("2006-01-02"), len(records))
+
 	if err := s.verifyClassOwnership(ctx, classID, teacherID); err != nil {
+		log.Printf("[attendance] SubmitBatch verifyOwnership failed: %v", err)
 		return nil, err
 	}
 
-	// Validate all statuses before touching the DB
 	for _, r := range records {
 		if !validStatuses[r.Status] {
+			log.Printf("[attendance] SubmitBatch invalid status %q for student %s", r.Status, r.StudentID)
 			return nil, ErrInvalidStatus
 		}
 	}
 
 	tx, err := s.db.Begin(ctx)
 	if err != nil {
+		log.Printf("[attendance] SubmitBatch begin tx failed: %v", err)
 		return nil, fmt.Errorf("begin transaction: %w", err)
 	}
 	defer tx.Rollback(ctx) //nolint:errcheck
 
-	// Insert session — date formatted as YYYY-MM-DD string for the DATE column
 	var sessionID string
 	dateStr := date.Format("2006-01-02")
 	err = tx.QueryRow(ctx,
@@ -95,13 +99,14 @@ func (s *Service) SubmitBatch(ctx context.Context, classID, teacherID string, da
 		classID, teacherID, dateStr,
 	).Scan(&sessionID)
 	if err != nil {
+		log.Printf("[attendance] SubmitBatch insert session failed: %v", err)
 		if strings.Contains(err.Error(), "unique") || strings.Contains(err.Error(), "duplicate") {
 			return nil, ErrDuplicateSession
 		}
 		return nil, fmt.Errorf("create session: %w", err)
 	}
+	log.Printf("[attendance] SubmitBatch session inserted id=%s", sessionID)
 
-	// Insert all records in the same transaction
 	for _, r := range records {
 		_, err = tx.Exec(ctx,
 			`INSERT INTO attendance_records (session_id, student_id, status)
@@ -109,13 +114,16 @@ func (s *Service) SubmitBatch(ctx context.Context, classID, teacherID string, da
 			sessionID, r.StudentID, r.Status,
 		)
 		if err != nil {
+			log.Printf("[attendance] SubmitBatch insert record failed student=%s status=%s: %v", r.StudentID, r.Status, err)
 			return nil, fmt.Errorf("insert record for student %s: %w", r.StudentID, err)
 		}
 	}
 
 	if err = tx.Commit(ctx); err != nil {
+		log.Printf("[attendance] SubmitBatch commit failed: %v", err)
 		return nil, fmt.Errorf("commit transaction: %w", err)
 	}
+	log.Printf("[attendance] SubmitBatch committed, fetching session")
 
 	return s.GetByDate(ctx, classID, teacherID, date)
 }
@@ -128,47 +136,54 @@ func (s *Service) GetByDate(ctx context.Context, classID, teacherID string, date
 	}
 
 	dateStr := date.Format("2006-01-02")
+	log.Printf("[attendance] GetByDate classID=%s date=%s", classID, dateStr)
+
 	var session Session
-	// Postgres DATE scans as time.Time via pgx — capture in a temp var and format
-	var sessionDate time.Time
 	err := s.db.QueryRow(ctx,
-		`SELECT id, class_id, teacher_id, date, submitted_at, is_locked
+		`SELECT id, class_id, teacher_id, date::text, submitted_at::text, is_locked
 		 FROM attendance_sessions
 		 WHERE class_id = $1 AND date = $2`,
 		classID, dateStr,
-	).Scan(&session.ID, &session.ClassID, &session.TeacherID, &sessionDate, &session.SubmittedAt, &session.IsLocked)
+	).Scan(&session.ID, &session.ClassID, &session.TeacherID, &session.Date, &session.SubmittedAt, &session.IsLocked)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
+			log.Printf("[attendance] GetByDate no session found")
 			return nil, ErrSessionNotFound
 		}
+		log.Printf("[attendance] GetByDate scan session failed: %v", err)
 		return nil, fmt.Errorf("query session: %w", err)
 	}
-	session.Date = sessionDate.Format("2006-01-02")
+	log.Printf("[attendance] GetByDate session found id=%s", session.ID)
 
 	rows, err := s.db.Query(ctx,
-		`SELECT id, session_id, student_id, status, marked_at
+		`SELECT id, session_id, student_id, status, marked_at::text
 		 FROM attendance_records
 		 WHERE session_id = $1
 		 ORDER BY student_id`,
 		session.ID,
 	)
 	if err != nil {
+		log.Printf("[attendance] GetByDate query records failed: %v", err)
 		return nil, fmt.Errorf("query records: %w", err)
 	}
 	defer rows.Close()
 
 	for rows.Next() {
 		var rec Record
-		var markedAt time.Time
-		if err := rows.Scan(&rec.ID, &rec.SessionID, &rec.StudentID, &rec.Status, &markedAt); err != nil {
+		if err := rows.Scan(&rec.ID, &rec.SessionID, &rec.StudentID, &rec.Status, &rec.MarkedAt); err != nil {
+			log.Printf("[attendance] GetByDate scan record failed: %v", err)
 			return nil, fmt.Errorf("scan record: %w", err)
 		}
-		rec.MarkedAt = markedAt.Format(time.RFC3339)
 		session.Records = append(session.Records, rec)
+	}
+	if rows.Err() != nil {
+		log.Printf("[attendance] GetByDate rows error: %v", rows.Err())
+		return nil, fmt.Errorf("iterate records: %w", rows.Err())
 	}
 	if session.Records == nil {
 		session.Records = []Record{}
 	}
+	log.Printf("[attendance] GetByDate returning %d records", len(session.Records))
 	return &session, nil
 }
 
@@ -179,14 +194,11 @@ func (s *Service) EditRecords(ctx context.Context, classID, teacherID, sessionID
 		return nil, err
 	}
 
-	// Load session to check ownership and date
-	// Postgres DATE column scans as time.Time via pgx
-	var sessionDate time.Time
-	var sessionClassID string
+	var sessionClassID, sessionDateStr string
 	err := s.db.QueryRow(ctx,
-		`SELECT class_id, date FROM attendance_sessions WHERE id = $1`,
+		`SELECT class_id, date::text FROM attendance_sessions WHERE id = $1`,
 		sessionID,
-	).Scan(&sessionClassID, &sessionDate)
+	).Scan(&sessionClassID, &sessionDateStr)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, ErrSessionNotFound
@@ -197,7 +209,11 @@ func (s *Service) EditRecords(ctx context.Context, classID, teacherID, sessionID
 		return nil, ErrSessionNotFound
 	}
 
-	// IST midnight lock check — primary enforcement in Go, before any DB write
+	sessionDate, err := time.Parse("2006-01-02", sessionDateStr)
+	if err != nil {
+		return nil, fmt.Errorf("parse session date: %w", err)
+	}
+
 	if timezone.IsLocked(sessionDate, time.Now()) {
 		return nil, ErrAttendanceLocked
 	}
