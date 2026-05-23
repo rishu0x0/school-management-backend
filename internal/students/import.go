@@ -31,18 +31,28 @@ type columnMap struct {
 }
 
 // detectColumns inspects the first row and returns column indices.
-// It matches header text case-insensitively against known aliases.
+// It matches header text case-insensitively against known aliases, stripping all
+// spaces, underscores, hyphens, and dots to handle arbitrary formatting.
 func detectColumns(headers []string) (*columnMap, error) {
 	cm := &columnMap{name: -1, roll: -1, photoURL: -1}
 
+	normalize := func(s string) string {
+		s = strings.ToLower(s)
+		s = strings.ReplaceAll(s, " ", "")
+		s = strings.ReplaceAll(s, "_", "")
+		s = strings.ReplaceAll(s, "-", "")
+		s = strings.ReplaceAll(s, ".", "")
+		return strings.TrimSpace(s)
+	}
+
 	for i, raw := range headers {
-		h := strings.TrimSpace(strings.ToLower(raw))
+		h := normalize(raw)
 		switch h {
-		case "full_name", "name", "student name", "student_name", "fullname":
+		case "fullname", "name", "studentname":
 			cm.name = i
-		case "roll_number", "roll", "roll no", "roll_no", "sr no", "sr_no", "rollnumber":
+		case "rollnumber", "roll", "rollno", "srno", "serialnumber", "slno":
 			cm.roll = i
-		case "photo_url", "photo", "photourl", "photo url":
+		case "photourl", "photo", "photopath", "image", "imageurl":
 			cm.photoURL = i
 		}
 	}
