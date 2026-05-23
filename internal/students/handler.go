@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"path/filepath"
 	"strconv"
+	"strings"
 
 	"github.com/go-chi/chi/v5"
 	"school-management/backend/internal/auth"
@@ -160,6 +162,44 @@ func (h *Handler) Seed(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	writeJSON(w, http.StatusCreated, map[string]int{"created": created})
+}
+
+// BulkImport handles POST /classes/{classID}/students/import
+// Accepts a multipart form with a single "file" field (.xlsx).
+func (h *Handler) BulkImport(w http.ResponseWriter, r *http.Request) {
+	classID := chi.URLParam(r, "classID")
+	teacherID := auth.TeacherIDFromContext(r.Context())
+
+	// Limit upload to 10 MB.
+	if err := r.ParseMultipartForm(10 << 20); err != nil {
+		writeError(w, http.StatusBadRequest, "file_too_large", "File must be under 10 MB")
+		return
+	}
+
+	file, header, err := r.FormFile("file")
+	if err != nil {
+		writeError(w, http.StatusBadRequest, "missing_file", "No file uploaded — send a multipart form with a 'file' field")
+		return
+	}
+	defer file.Close()
+
+	// Validate extension.
+	ext := strings.ToLower(filepath.Ext(header.Filename))
+	if ext != ".xlsx" {
+		writeError(w, http.StatusBadRequest, "invalid_format", "Only .xlsx files are supported")
+		return
+	}
+
+	result, err := h.svc.BulkImportFromExcel(r.Context(), classID, teacherID, file)
+	if err != nil {
+		if errors.Is(err, ErrClassNotFound) {
+			writeError(w, http.StatusNotFound, "class_not_found", "Class not found")
+			return
+		}
+		writeError(w, http.StatusBadRequest, "import_error", err.Error())
+		return
+	}
+	writeJSON(w, http.StatusOK, result)
 }
 
 // writeJSON serialises v as JSON and writes status.

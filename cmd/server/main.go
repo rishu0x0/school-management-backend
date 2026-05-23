@@ -100,6 +100,7 @@ func main() {
 		r.Put("/classes/{classID}/students/{studentID}", studentHandler.Update)
 		r.Delete("/classes/{classID}/students/{studentID}", studentHandler.SoftRemove)
 		r.Post("/classes/{classID}/students/seed", studentHandler.Seed)
+		r.Post("/classes/{classID}/students/import", studentHandler.BulkImport)
 
 		// Attendance (plan 03-03)
 		r.Get("/classes/{classID}/attendance", attendanceHandler.GetByDate)
