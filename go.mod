@@ -5,9 +5,11 @@ go 1.26.1
 require (
 	github.com/go-chi/chi/v5 v5.2.5
 	github.com/golang-jwt/jwt/v5 v5.3.1
+	github.com/golang-migrate/migrate/v4 v4.19.1
 	github.com/jackc/pgx/v5 v5.9.2
 	github.com/johnfercher/maroto/v2 v2.4.0
 	github.com/joho/godotenv v1.5.1
+	github.com/redis/go-redis/v9 v9.10.0
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/xuri/excelize/v2 v2.10.1
 	golang.org/x/crypto v0.51.0
@@ -15,7 +17,9 @@ require (
 
 require (
 	github.com/boombuler/barcode v1.1.0 // indirect
+	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/clipperhouse/uax29/v2 v2.7.0 // indirect
+	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/f-amaral/go-async v0.3.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/hhrutter/lzw v1.0.0 // indirect
@@ -26,6 +30,7 @@ require (
 	github.com/jackc/puddle/v2 v2.2.2 // indirect
 	github.com/johnfercher/go-tree v1.1.0 // indirect
 	github.com/kr/text v0.2.0 // indirect
+	github.com/lib/pq v1.10.9 // indirect
 	github.com/mattn/go-runewidth v0.0.21 // indirect
 	github.com/pdfcpu/pdfcpu v0.11.1 // indirect
 	github.com/phpdave11/gofpdf v1.4.3 // indirect

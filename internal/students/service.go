@@ -8,6 +8,7 @@ import (
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"school-management/backend/internal/cache"
 )
 
 var (
@@ -29,11 +30,17 @@ type Student struct {
 }
 
 type Service struct {
-	db *pgxpool.Pool
+	db    *pgxpool.Pool
+	cache *cache.Client
 }
 
-func NewService(db *pgxpool.Pool) *Service {
-	return &Service{db: db}
+func NewService(db *pgxpool.Pool, c *cache.Client) *Service {
+	return &Service{db: db, cache: c}
+}
+
+// studentListKey returns the Dragonfly cache key for a class's student list.
+func studentListKey(classID string) string {
+	return fmt.Sprintf("students:list:%s", classID)
 }
 
 // verifyClassOwnership confirms the class exists and belongs to the teacher.
@@ -49,11 +56,27 @@ func (s *Service) verifyClassOwnership(ctx context.Context, classID, teacherID s
 	return nil
 }
 
+// List returns all students for a class, using Cache-Aside via Dragonfly.
+//
+// Cache-Aside flow:
+//  1. Check Dragonfly — on HIT return cached data immediately.
+//  2. On MISS execute the Postgres query.
+//  3. Store the result in Dragonfly with a 5-minute TTL.
+//  4. Return the data.
 func (s *Service) List(ctx context.Context, classID, teacherID string) ([]Student, error) {
 	if err := s.verifyClassOwnership(ctx, classID, teacherID); err != nil {
 		return nil, err
 	}
 
+	key := studentListKey(classID)
+
+	// 1. Cache lookup
+	var cached []Student
+	if err := s.cache.GetJSON(ctx, key, &cached); err == nil {
+		return cached, nil // cache HIT
+	}
+
+	// 2. Cache MISS — query Postgres
 	rows, err := s.db.Query(ctx,
 		`SELECT id, class_id, roll_number, full_name, photo_url, is_active, created_at::text
 		 FROM students
@@ -77,9 +100,14 @@ func (s *Service) List(ctx context.Context, classID, teacherID string) ([]Studen
 	if out == nil {
 		out = []Student{}
 	}
+
+	// 3. Store in cache (non-fatal if Dragonfly is unavailable)
+	s.cache.SetJSON(ctx, key, out, cache.DefaultTTL)
+
 	return out, nil
 }
 
+// Create inserts a new student and invalidates the class's student list cache.
 func (s *Service) Create(ctx context.Context, classID, teacherID, fullName string, rollNumber *int, photoURL string) (*Student, error) {
 	if err := s.verifyClassOwnership(ctx, classID, teacherID); err != nil {
 		return nil, err
@@ -114,10 +142,14 @@ func (s *Service) Create(ctx context.Context, classID, teacherID, fullName strin
 		}
 		return nil, fmt.Errorf("create student: %w", err)
 	}
+
+	// Invalidate cache — next List call will re-fetch from Postgres
+	_ = s.cache.Del(ctx, studentListKey(classID))
+
 	return &st, nil
 }
 
-// Update patches one or more student fields.
+// Update patches one or more student fields and invalidates the list cache.
 // IMPORTANT: students table has NO updated_at column — do not include it in SET clauses.
 func (s *Service) Update(ctx context.Context, classID, teacherID, studentID string, fullName *string, rollNumber *int, photoURL *string) (*Student, error) {
 	if err := s.verifyClassOwnership(ctx, classID, teacherID); err != nil {
@@ -174,10 +206,15 @@ func (s *Service) Update(ctx context.Context, classID, teacherID, studentID stri
 		}
 		return nil, fmt.Errorf("update student: %w", err)
 	}
+
+	// Invalidate cache
+	_ = s.cache.Del(ctx, studentListKey(classID))
+
 	return &st, nil
 }
 
 // SoftRemove sets is_active=false so attendance history is preserved.
+// Also invalidates the cached student list.
 func (s *Service) SoftRemove(ctx context.Context, classID, teacherID, studentID string) error {
 	if err := s.verifyClassOwnership(ctx, classID, teacherID); err != nil {
 		return err
@@ -193,11 +230,16 @@ func (s *Service) SoftRemove(ctx context.Context, classID, teacherID, studentID 
 	if tag.RowsAffected() == 0 {
 		return ErrStudentNotFound
 	}
+
+	// Invalidate cache
+	_ = s.cache.Del(ctx, studentListKey(classID))
+
 	return nil
 }
 
 // Seed creates N dummy students with sequential roll numbers starting after the current max.
 // Uses ON CONFLICT DO NOTHING so re-seeding the same class never errors.
+// Invalidates the list cache after all inserts.
 func (s *Service) Seed(ctx context.Context, classID, teacherID string, count int) (int, error) {
 	if err := s.verifyClassOwnership(ctx, classID, teacherID); err != nil {
 		return 0, err
@@ -226,6 +268,11 @@ func (s *Service) Seed(ctx context.Context, classID, teacherID string, count int
 			created++
 		}
 	}
+
+	if created > 0 {
+		_ = s.cache.Del(ctx, studentListKey(classID))
+	}
+
 	return created, nil
 }
 

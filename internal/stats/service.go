@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+	"school-management/backend/internal/cache"
 	"school-management/backend/pkg/timezone"
 )
 
@@ -38,11 +39,22 @@ type MonthlyResult struct {
 }
 
 type Service struct {
-	db *pgxpool.Pool
+	db    *pgxpool.Pool
+	cache *cache.Client
 }
 
-func NewService(db *pgxpool.Pool) *Service {
-	return &Service{db: db}
+func NewService(db *pgxpool.Pool, c *cache.Client) *Service {
+	return &Service{db: db, cache: c}
+}
+
+// statsTodayKey returns the Dragonfly cache key for today's summary.
+func statsTodayKey(classID, dateStr string) string {
+	return fmt.Sprintf("stats:today:%s:%s", classID, dateStr)
+}
+
+// statsMonthlyKey returns the Dragonfly cache key for a monthly summary.
+func statsMonthlyKey(classID, month string) string {
+	return fmt.Sprintf("stats:monthly:%s:%s", classID, month)
 }
 
 func (s *Service) verifyClassOwnership(ctx context.Context, classID, teacherID string) error {
@@ -59,6 +71,10 @@ func (s *Service) verifyClassOwnership(ctx context.Context, classID, teacherID s
 
 // TodaySummary returns attendance counts for today's IST date.
 // If no session exists for today, returns all zeros with submitted=false.
+//
+// Cache-Aside: key = stats:today:{classID}:{YYYY-MM-DD}, TTL = 5 min.
+// The zero-result (no session yet) is also cached to prevent repeated DB
+// queries during the pre-submission window.
 func (s *Service) TodaySummary(ctx context.Context, classID, teacherID string) (*TodayResult, error) {
 	if err := s.verifyClassOwnership(ctx, classID, teacherID); err != nil {
 		return nil, err
@@ -66,7 +82,15 @@ func (s *Service) TodaySummary(ctx context.Context, classID, teacherID string) (
 
 	todayIST := timezone.TodayIST()
 	dateStr := todayIST.Format("2006-01-02")
+	key := statsTodayKey(classID, dateStr)
 
+	// 1. Cache lookup
+	var cached TodayResult
+	if err := s.cache.GetJSON(ctx, key, &cached); err == nil {
+		return &cached, nil
+	}
+
+	// 2. Cache MISS — query Postgres
 	result := &TodayResult{
 		ClassID: classID,
 		Date:    dateStr,
@@ -80,6 +104,8 @@ func (s *Service) TodaySummary(ctx context.Context, classID, teacherID string) (
 	).Scan(&sessionID)
 	if err != nil {
 		// No session today — return zeros with submitted=false
+		// Cache the zero-result briefly (1 min) to reduce chatter
+		s.cache.SetJSON(ctx, key, result, time.Minute)
 		return result, nil
 	}
 	result.Submitted = true
@@ -110,17 +136,31 @@ func (s *Service) TodaySummary(ctx context.Context, classID, teacherID string) (
 		}
 	}
 	result.TotalCount = result.PresentCount + result.AbsentCount + result.LeaveCount
+
+	// 3. Cache the submitted result
+	s.cache.SetJSON(ctx, key, result, cache.DefaultTTL)
+
 	return result, nil
 }
 
 // MonthlySummary returns days recorded, average attendance %, and students below 75%
 // for the given month (format: YYYY-MM).
+//
+// Cache-Aside: key = stats:monthly:{classID}:{YYYY-MM}, TTL = 5 min.
 func (s *Service) MonthlySummary(ctx context.Context, classID, teacherID, month string) (*MonthlyResult, error) {
 	if err := s.verifyClassOwnership(ctx, classID, teacherID); err != nil {
 		return nil, err
 	}
 
-	// Parse month to get date range
+	key := statsMonthlyKey(classID, month)
+
+	// 1. Cache lookup
+	var cached MonthlyResult
+	if err := s.cache.GetJSON(ctx, key, &cached); err == nil {
+		return &cached, nil
+	}
+
+	// 2. Cache MISS — Parse month to get date range
 	startDate, err := time.Parse("2006-01", month)
 	if err != nil {
 		return nil, fmt.Errorf("invalid month format: %w", err)
@@ -141,6 +181,7 @@ func (s *Service) MonthlySummary(ctx context.Context, classID, teacherID, month 
 		classID, startDate.Format("2006-01-02"), endDate.Format("2006-01-02"),
 	).Scan(&result.DaysRecorded)
 	if err != nil || result.DaysRecorded == 0 {
+		s.cache.SetJSON(ctx, key, result, cache.DefaultTTL)
 		return result, nil
 	}
 
@@ -196,6 +237,9 @@ func (s *Service) MonthlySummary(ctx context.Context, classID, teacherID, month 
 	if studentCount > 0 {
 		result.AveragePercentage = totalPercent / float64(studentCount)
 	}
+
+	// 3. Store in cache
+	s.cache.SetJSON(ctx, key, result, cache.DefaultTTL)
 
 	return result, nil
 }

@@ -336,3 +336,53 @@ func (s *Service) Logout(ctx context.Context, rawRefreshToken string) error {
 	)
 	return err
 }
+
+// UpdateProfile updates the teacher's name and school_name.
+func (s *Service) UpdateProfile(ctx context.Context, teacherID, name, schoolName string) error {
+	name = strings.TrimSpace(name)
+	schoolName = strings.TrimSpace(schoolName)
+	if name == "" {
+		return &ValidationError{Field: "name", Message: "name is required"}
+	}
+	if schoolName == "" {
+		return &ValidationError{Field: "school_name", Message: "school_name is required"}
+	}
+	_, err := s.db.Exec(ctx,
+		`UPDATE teachers SET name = $1, school_name = $2, updated_at = NOW() WHERE id = $3`,
+		name, schoolName, teacherID,
+	)
+	if err != nil {
+		return fmt.Errorf("update profile: %w", err)
+	}
+	return nil
+}
+
+// ChangePassword verifies the current password and replaces it with the new one.
+func (s *Service) ChangePassword(ctx context.Context, teacherID, oldPassword, newPassword string) error {
+	if len(newPassword) < 8 {
+		return &ValidationError{Field: "new_password", Message: "password must be at least 8 characters"}
+	}
+
+	var currentHash string
+	err := s.db.QueryRow(ctx,
+		`SELECT password_hash FROM teachers WHERE id = $1`, teacherID,
+	).Scan(&currentHash)
+	if err != nil {
+		return ErrInvalidCredentials
+	}
+
+	if err = bcrypt.CompareHashAndPassword([]byte(currentHash), []byte(oldPassword)); err != nil {
+		return ErrInvalidCredentials
+	}
+
+	newHash, err := bcrypt.GenerateFromPassword([]byte(newPassword), 12)
+	if err != nil {
+		return fmt.Errorf("hash password: %w", err)
+	}
+
+	_, err = s.db.Exec(ctx,
+		`UPDATE teachers SET password_hash = $1, updated_at = NOW() WHERE id = $2`,
+		string(newHash), teacherID,
+	)
+	return err
+}

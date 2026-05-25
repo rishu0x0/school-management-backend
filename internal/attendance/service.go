@@ -10,6 +10,7 @@ import (
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"school-management/backend/internal/cache"
 	"school-management/backend/pkg/timezone"
 )
 
@@ -47,11 +48,17 @@ type BatchRecord struct {
 }
 
 type Service struct {
-	db *pgxpool.Pool
+	db    *pgxpool.Pool
+	cache *cache.Client
 }
 
-func NewService(db *pgxpool.Pool) *Service {
-	return &Service{db: db}
+func NewService(db *pgxpool.Pool, c *cache.Client) *Service {
+	return &Service{db: db, cache: c}
+}
+
+// attendanceKey returns the Dragonfly cache key for an attendance session.
+func attendanceKey(classID, dateStr string) string {
+	return fmt.Sprintf("attendance:session:%s:%s", classID, dateStr)
 }
 
 func (s *Service) verifyClassOwnership(ctx context.Context, classID, teacherID string) error {
@@ -68,6 +75,7 @@ func (s *Service) verifyClassOwnership(ctx context.Context, classID, teacherID s
 
 // SubmitBatch saves an attendance session and all records in a single transaction.
 // Returns ErrDuplicateSession if attendance already exists for this class+date.
+// Invalidates the cache key for this class+date on success.
 func (s *Service) SubmitBatch(ctx context.Context, classID, teacherID string, date time.Time, records []BatchRecord) (*Session, error) {
 	log.Printf("[attendance] SubmitBatch start classID=%s teacherID=%s date=%s records=%d", classID, teacherID, date.Format("2006-01-02"), len(records))
 
@@ -125,11 +133,20 @@ func (s *Service) SubmitBatch(ctx context.Context, classID, teacherID string, da
 	}
 	log.Printf("[attendance] SubmitBatch committed, fetching session")
 
+	// Invalidate cache so GetByDate re-fetches the newly saved session
+	_ = s.cache.Del(ctx, attendanceKey(classID, dateStr))
+
 	return s.GetByDate(ctx, classID, teacherID, date)
 }
 
 // GetByDate returns the attendance session and all records for a given date.
 // Returns nil, ErrSessionNotFound when no session exists — handler returns {session: null} gracefully.
+//
+// Cache-Aside flow:
+//  1. Check Dragonfly — on HIT return cached session immediately.
+//  2. On MISS query Postgres.
+//  3. Only cache the result if a session was found (do NOT cache misses).
+//  4. Return the session.
 func (s *Service) GetByDate(ctx context.Context, classID, teacherID string, date time.Time) (*Session, error) {
 	if err := s.verifyClassOwnership(ctx, classID, teacherID); err != nil {
 		return nil, err
@@ -138,6 +155,16 @@ func (s *Service) GetByDate(ctx context.Context, classID, teacherID string, date
 	dateStr := date.Format("2006-01-02")
 	log.Printf("[attendance] GetByDate classID=%s date=%s", classID, dateStr)
 
+	key := attendanceKey(classID, dateStr)
+
+	// 1. Cache lookup
+	var cached Session
+	if err := s.cache.GetJSON(ctx, key, &cached); err == nil {
+		log.Printf("[attendance] GetByDate cache HIT key=%s", key)
+		return &cached, nil
+	}
+
+	// 2. Cache MISS — query Postgres
 	var session Session
 	err := s.db.QueryRow(ctx,
 		`SELECT id, class_id, teacher_id, date::text, submitted_at::text, is_locked
@@ -184,11 +211,16 @@ func (s *Service) GetByDate(ctx context.Context, classID, teacherID string, date
 		session.Records = []Record{}
 	}
 	log.Printf("[attendance] GetByDate returning %d records", len(session.Records))
+
+	// 3. Store in cache (only for found sessions — don't cache ErrSessionNotFound)
+	s.cache.SetJSON(ctx, key, &session, cache.DefaultTTL)
+
 	return &session, nil
 }
 
 // EditRecords updates status for one or more records in a session.
 // Returns ErrAttendanceLocked if past midnight IST on the session date.
+// Invalidates the session's cache key on success.
 func (s *Service) EditRecords(ctx context.Context, classID, teacherID, sessionID string, updates []BatchRecord) (*Session, error) {
 	if err := s.verifyClassOwnership(ctx, classID, teacherID); err != nil {
 		return nil, err
@@ -232,6 +264,9 @@ func (s *Service) EditRecords(ctx context.Context, classID, teacherID, sessionID
 			return nil, fmt.Errorf("update record for student %s: %w", u.StudentID, err)
 		}
 	}
+
+	// Invalidate cache — GetByDate will re-fetch the updated records
+	_ = s.cache.Del(ctx, attendanceKey(classID, sessionDateStr))
 
 	return s.GetByDate(ctx, classID, teacherID, sessionDate)
 }

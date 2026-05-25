@@ -17,12 +17,13 @@ var (
 )
 
 type Class struct {
-	ID        string  `json:"id"`
-	TeacherID string  `json:"teacher_id"`
-	Name      string  `json:"name"`
-	Section   *string `json:"section,omitempty"`
-	Subject   *string `json:"subject,omitempty"`
-	CreatedAt string  `json:"created_at"`
+	ID           string  `json:"id"`
+	TeacherID    string  `json:"teacher_id"`
+	Name         string  `json:"name"`
+	Section      *string `json:"section,omitempty"`
+	Subject      *string `json:"subject,omitempty"`
+	StudentCount int     `json:"student_count"`
+	CreatedAt    string  `json:"created_at"`
 }
 
 type DeleteWarning struct {
@@ -40,10 +41,12 @@ func NewService(db *pgxpool.Pool) *Service {
 
 func (s *Service) List(ctx context.Context, teacherID string) ([]Class, error) {
 	rows, err := s.db.Query(ctx,
-		`SELECT id, teacher_id, name, section, subject, created_at::text
-		 FROM classes
-		 WHERE teacher_id = $1
-		 ORDER BY name`,
+		`SELECT c.id, c.teacher_id, c.name, c.section, c.subject,
+		        (SELECT COUNT(*) FROM students s WHERE s.class_id = c.id AND s.is_active = true) AS student_count,
+		        c.created_at::text
+		 FROM classes c
+		 WHERE c.teacher_id = $1
+		 ORDER BY c.name`,
 		teacherID,
 	)
 	if err != nil {
@@ -54,7 +57,7 @@ func (s *Service) List(ctx context.Context, teacherID string) ([]Class, error) {
 	var out []Class
 	for rows.Next() {
 		var c Class
-		if err := rows.Scan(&c.ID, &c.TeacherID, &c.Name, &c.Section, &c.Subject, &c.CreatedAt); err != nil {
+		if err := rows.Scan(&c.ID, &c.TeacherID, &c.Name, &c.Section, &c.Subject, &c.StudentCount, &c.CreatedAt); err != nil {
 			return nil, fmt.Errorf("scan class: %w", err)
 		}
 		out = append(out, c)

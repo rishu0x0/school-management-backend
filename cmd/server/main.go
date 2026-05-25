@@ -13,9 +13,10 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/joho/godotenv"
+	"school-management/backend/internal/apilog"
 	"school-management/backend/internal/attendance"
 	"school-management/backend/internal/auth"
-	"school-management/backend/internal/apilog"
+	"school-management/backend/internal/cache"
 	"school-management/backend/internal/classes"
 	"school-management/backend/internal/config"
 	"school-management/backend/internal/db"
@@ -30,8 +31,22 @@ func main() {
 	_ = godotenv.Load()
 
 	cfg := config.Load()
+
+	// ── Postgres connection pool ─────────────────────────────────────────────
 	pool := db.NewPool(cfg.DatabaseURL)
 	defer pool.Close()
+
+	// ── DragonflyDB cache client ─────────────────────────────────────────────
+	cacheClient := cache.NewClient(cfg.DragonflyAddr, cfg.DragonflyPassword)
+
+	// ── OCI Object Storage client ────────────────────────────────────────────
+	storageClient := reports.NewStorageClient(
+		cfg.OCINamespace,
+		cfg.OCIBucketName,
+		cfg.OCIRegion,
+		cfg.OCIConfigFile,
+		cfg.OCIUseInstancePrincipal,
+	)
 
 	jwtSvc := jwtpkg.New(cfg.JWTSecret, cfg.JWTAccessExpiry)
 	msg91Client := msg91.New(cfg.MSG91AuthToken, cfg.MSG91WidgetID)
@@ -56,16 +71,16 @@ func main() {
 	classSvc := classes.NewService(pool)
 	classHandler := classes.NewHandler(classSvc)
 
-	studentSvc := students.NewService(pool)
+	// Services now receive the cache client for Cache-Aside reads + invalidation
+	studentSvc := students.NewService(pool, cacheClient)
 	studentHandler := students.NewHandler(studentSvc)
 
-	attendanceSvc := attendance.NewService(pool)
+	attendanceSvc := attendance.NewService(pool, cacheClient)
 	attendanceHandler := attendance.NewHandler(attendanceSvc)
 
-	statsSvc := stats.NewService(pool)
+	statsSvc := stats.NewService(pool, cacheClient)
 	statsHandler := stats.NewHandler(statsSvc)
 
-	storageClient := reports.NewStorageClient(cfg.SupabaseURL, cfg.SupabaseServiceRoleKey)
 	reportSvc := reports.NewService(pool, storageClient)
 	reportHandler := reports.NewHandler(reportSvc)
 	stopCron := reports.StartCron(pool, reportSvc)
@@ -81,6 +96,8 @@ func main() {
 		r.Group(func(r chi.Router) {
 			r.Use(auth.JWTMiddleware(jwtSvc))
 			r.Post("/logout", authHandler.Logout)
+			r.Put("/me", authHandler.UpdateProfile)
+			r.Put("/password", authHandler.ChangePassword)
 		})
 	})
 

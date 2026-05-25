@@ -247,6 +247,76 @@ func (h *Handler) Logout(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, map[string]bool{"success": true})
 }
 
+type updateProfileRequest struct {
+	Name       string `json:"name"`
+	SchoolName string `json:"school_name"`
+}
+
+func (h *Handler) UpdateProfile(w http.ResponseWriter, r *http.Request) {
+	teacherID := TeacherIDFromContext(r.Context())
+	if teacherID == "" {
+		writeError(w, http.StatusUnauthorized, "missing_token", "Not authenticated")
+		return
+	}
+
+	var req updateProfileRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		writeError(w, http.StatusBadRequest, "invalid_json", "request body is not valid JSON")
+		return
+	}
+
+	if err := h.svc.UpdateProfile(r.Context(), teacherID, req.Name, req.SchoolName); err != nil {
+		var ve *ValidationError
+		if errors.As(err, &ve) {
+			writeError(w, http.StatusBadRequest, "validation_error", ve.Message)
+			return
+		}
+		writeError(w, http.StatusInternalServerError, "internal_error", "Failed to update profile")
+		return
+	}
+
+	writeJSON(w, http.StatusOK, map[string]bool{"success": true})
+}
+
+type changePasswordRequest struct {
+	OldPassword string `json:"old_password"`
+	NewPassword string `json:"new_password"`
+}
+
+func (h *Handler) ChangePassword(w http.ResponseWriter, r *http.Request) {
+	teacherID := TeacherIDFromContext(r.Context())
+	if teacherID == "" {
+		writeError(w, http.StatusUnauthorized, "missing_token", "Not authenticated")
+		return
+	}
+
+	var req changePasswordRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		writeError(w, http.StatusBadRequest, "invalid_json", "request body is not valid JSON")
+		return
+	}
+	if req.OldPassword == "" || req.NewPassword == "" {
+		writeError(w, http.StatusBadRequest, "missing_fields", "old_password and new_password are required")
+		return
+	}
+
+	if err := h.svc.ChangePassword(r.Context(), teacherID, req.OldPassword, req.NewPassword); err != nil {
+		var ve *ValidationError
+		if errors.As(err, &ve) {
+			writeError(w, http.StatusBadRequest, "validation_error", ve.Message)
+			return
+		}
+		if errors.Is(err, ErrInvalidCredentials) {
+			writeError(w, http.StatusUnauthorized, "wrong_password", "Current password is incorrect")
+			return
+		}
+		writeError(w, http.StatusInternalServerError, "internal_error", "Failed to change password")
+		return
+	}
+
+	writeJSON(w, http.StatusOK, map[string]bool{"success": true})
+}
+
 func writeJSON(w http.ResponseWriter, status int, v interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
